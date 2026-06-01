@@ -7,6 +7,7 @@ import ScrollReveal from './components/ScrollReveal';
 import TypingText from './components/TypingText';
 import ParticleBackground from './components/ParticleBackground';
 import PhotoGallery from './components/PhotoGallery';
+import ThreadDivider from './components/ThreadDivider';
 
 function App() {
   const [isOpen, setIsOpen] = useState(false);
@@ -112,7 +113,7 @@ function App() {
             {/* Quran Verse */}
             <div style={styles.verseCard} className="card">
               <p style={styles.verseArabic} className="font-serif">
-                وَمِنْ اٰيٰتِهٖٓ اَنْ خَلَقَ لَكُمْ مِّنْ اَنْفُسِكُمْ اَزْوَاجًا لِّتَسْكُنُوْٓا اِلَيْهَا وَجَعَلَ بَيْنَكُمْ مَّوَدَّةً وَّرَحْمَةً ۗاِنَّ فِيْ ذٰلِكَ لَاٰيٰتٍ لِّقَوْمٍ يَّتَفَكَّرُوْنَ
+                وَمِنْ اٰيٰتِهٖٓ اَنْ خَلَقَ لَكُمْ مِّنْ اَنْفُسِكُمْ اَzْوَاجًا لِّتَسْكُنُوْٓا اِلَيْهَا وَجَعَلَ بَيْنَكُمْ مَّوَدَّةً وَّرَحْمَةً ۗاِنَّ فِيْ ذٰلِكَ لَاٰيٰتٍ لِّقَوْمٍ يَّتَفَكَّرُوْنَ
               </p>
               <p style={styles.verseTranslation}>
                 <TypingText 
@@ -125,7 +126,7 @@ function App() {
               <span style={styles.verseRef} className="font-playful">QS Ar-Rum: 21</span>
             </div>
             
-            <div className="section-divider"></div>
+            <ThreadDivider />
           </ScrollReveal>
         </div>
       </section>
@@ -175,7 +176,7 @@ function App() {
               </div>
             </div>
 
-            <div className="section-divider"></div>
+            <ThreadDivider />
           </ScrollReveal>
         </div>
       </section>
@@ -261,7 +262,7 @@ function App() {
               <MapPin size={18} /> Lihat Lokasi Maps
             </a>
 
-            <div className="section-divider"></div>
+            <ThreadDivider />
           </ScrollReveal>
         </div>
       </section>
@@ -272,7 +273,7 @@ function App() {
           <ScrollReveal>
             <h2 style={styles.sectionTitle} className="font-playful">Galeri Foto</h2>
             <PhotoGallery />
-            <div className="section-divider"></div>
+            <ThreadDivider />
           </ScrollReveal>
         </div>
       </section>
@@ -283,7 +284,7 @@ function App() {
           <ScrollReveal>
             <h2 style={styles.sectionTitle} className="font-playful">Our Big Day Awaits</h2>
             <Countdown />
-            <div className="section-divider"></div>
+            <ThreadDivider />
           </ScrollReveal>
         </div>
       </section>
@@ -315,7 +316,7 @@ function App() {
               </div>
             </div>
 
-            <div className="section-divider"></div>
+            <ThreadDivider />
           </ScrollReveal>
         </div>
       </section>
@@ -326,7 +327,7 @@ function App() {
           <ScrollReveal>
             <h2 style={styles.sectionTitle} className="font-playful">Ucapan & Kehadiran</h2>
             <RSVPForm defaultGuestName={guestName === 'Sahabat & Kerabat' ? '' : guestName} />
-            <div className="section-divider"></div>
+            <ThreadDivider />
           </ScrollReveal>
         </div>
       </section>
@@ -371,7 +372,7 @@ function App() {
               <Phone size={18} /> Nomor WhatsApp
             </a>
 
-            <div className="section-divider"></div>
+            <ThreadDivider />
           </ScrollReveal>
         </div>
       </section>
