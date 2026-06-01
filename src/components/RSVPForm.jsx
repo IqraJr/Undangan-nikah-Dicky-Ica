@@ -66,8 +66,7 @@ const RSVPForm = ({ defaultGuestName }) => {
     setGuestWishes(updatedWishes);
     localStorage.setItem('wedding_wishes', JSON.stringify(updatedWishes));
     
-    // Redirect to WhatsApp
-    const coupleWhatsAppNumber = '6281234567890'; // Replace with couple's real number
+    const coupleWhatsAppNumber = '6282229344852';
     const presenceStatus = presence === 'hadir' ? 'Hadir' : 'Tidak Hadir';
     
     const whatsappText = `Assalamualaikum Dicky & Ica, saya ingin mengonfirmasi kehadiran:\n\n` +
