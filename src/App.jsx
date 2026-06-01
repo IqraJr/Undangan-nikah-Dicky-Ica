@@ -44,7 +44,7 @@ function App() {
     navigator.clipboard.writeText(number).then(() => {
       setCopiedAccount(bankId);
       setToast('Nomor rekening berhasil disalin! 📋✨');
-      
+
       // Auto hide alerts after 2.5 seconds
       setTimeout(() => {
         setToast(null);
@@ -73,10 +73,10 @@ function App() {
           </div>
 
           <div style={styles.coverIllustration}>
-            <img 
-              src="./extracted_images/X10_1.png" 
-              alt="Dicky and Ica Childhood Illustration" 
-              style={styles.coupleImage} 
+            <img
+              src="./extracted_images/X10_1.png"
+              alt="Dicky and Ica Childhood Illustration"
+              style={styles.coupleImage}
             />
           </div>
 
@@ -109,23 +109,23 @@ function App() {
         <div className="section-content">
           <ScrollReveal>
             <div className="font-playful" style={styles.saveDateHeader}>SAVE THE DATE!</div>
-            
+
             {/* Quran Verse */}
             <div style={styles.verseCard} className="card">
               <p style={styles.verseArabic} className="font-serif">
                 وَمِنْ اٰيٰتِهٖٓ اَنْ خَلَقَ لَكُمْ مِّنْ اَنْفُسِكُمْ اَzْوَاجًا لِّتَسْكُنُوْٓا اِلَيْهَا وَجَعَلَ بَيْنَكُمْ مَّوَدَّةً وَّرَحْمَةً ۗاِنَّ فِيْ ذٰلِكَ لَاٰيٰتٍ لِّقَوْمٍ يَّتَفَكَّرُوْنَ
               </p>
               <p style={styles.verseTranslation}>
-                <TypingText 
-                  text="“Di antara tanda-tanda (kebesaran)-Nya ialah bahwa Dia menciptakan pasangan-pasangan untukmu dari (jenis) dirimu sendiri agar kamu cenderung dan merasa tenteram kepadanya, dan Dia menjadikan di antaramu rasa cinta dan kasih sayang. Sesungguhnya pada yang demikian itu benar-benar terdapat tanda-tanda (kebesaran Allah) bagi kaum yang berpikir.”" 
-                  speed={15} 
-                  delay={400} 
-                  triggerOnScroll={true} 
+                <TypingText
+                  text="“Di antara tanda-tanda (kebesaran)-Nya ialah bahwa Dia menciptakan pasangan-pasangan untukmu dari (jenis) dirimu sendiri agar kamu cenderung dan merasa tenteram kepadanya, dan Dia menjadikan di antaramu rasa cinta dan kasih sayang. Sesungguhnya pada yang demikian itu benar-benar terdapat tanda-tanda (kebesaran Allah) bagi kaum yang berpikir.”"
+                  speed={15}
+                  delay={400}
+                  triggerOnScroll={true}
                 />
               </p>
               <span style={styles.verseRef} className="font-playful">QS Ar-Rum: 21</span>
             </div>
-            
+
             <ThreadDivider />
           </ScrollReveal>
         </div>
@@ -136,12 +136,12 @@ function App() {
         <div className="section-content">
           <ScrollReveal>
             <h2 style={styles.sectionTitle} className="font-playful">Bride & Groom</h2>
-            
+
             <div style={{ margin: '16px 0 32px 0' }}>
               <div className="polaroid-frame" style={styles.polaroidContainer}>
-                <img 
-                  src="./extracted_images/X18_2.png" 
-                  alt="Dicky and Ica" 
+                <img
+                  src="./extracted_images/X18_2.png"
+                  alt="Dicky and Ica"
                   style={styles.polaroidImg}
                 />
                 <div className="caption">Dicky & Ica</div>
@@ -186,7 +186,7 @@ function App() {
         <div className="section-content">
           <ScrollReveal>
             <h2 style={styles.sectionTitle} className="font-playful">Waktu & Tempat</h2>
-            
+
             <div className="grid-2" style={{ alignItems: 'center' }}>
               {/* Custom Mini Calendar */}
               <div style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
@@ -207,12 +207,12 @@ function App() {
                     <div style={styles.calDay}>1</div>
                     <div style={styles.calDay}>2</div>
                     <div style={styles.calDay}>3</div>
-                    
+
                     <div style={styles.calDDay}>
                       <span className="font-playful">4</span>
                       <span style={styles.calDDayLabel}>D-day</span>
                     </div>
-                    
+
                     <div style={styles.calDay}>5</div>
                     <div style={styles.calDay}>6</div>
                     <div style={styles.calDay}>7</div>
@@ -294,7 +294,7 @@ function App() {
         <div className="section-content">
           <ScrollReveal>
             <h2 style={styles.sectionTitle} className="font-playful">Love Story</h2>
-            
+
             <div className="timeline">
               <div className="timeline-item">
                 <div className="timeline-title">Awal Pertemuan</div>
@@ -351,13 +351,13 @@ function App() {
                   </div>
                   <p style={styles.giftNumber} className="font-playful">{acc.number}</p>
                   <p style={styles.giftHolder}>Atas nama: {acc.holder}</p>
-                  
-                  <button 
-                    onClick={() => handleCopy(acc.number, acc.id)} 
+
+                  <button
+                    onClick={() => handleCopy(acc.number, acc.id)}
                     className="btn-secondary"
                     style={styles.copyBtn}
                   >
-                    <Copy size={14} /> 
+                    <Copy size={14} />
                     {copiedAccount === acc.id ? 'Tersalin!' : 'Salin Rekening'}
                   </button>
                 </div>
