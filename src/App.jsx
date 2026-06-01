@@ -61,7 +61,7 @@ function App() {
   };
 
   const googleMapsUrl = 'https://maps.google.com/?q=Hotel+Fortune+Convention+Kendari';
-  const whatsappConfirmUrl = 'https://wa.me/6281234567890?text=Halo%20Ica%20%26%20Dicky,%20saya%20ingin%20mengonfirmasi%20pengiriman%20kado...';
+  const whatsappConfirmUrl = 'https://wa.me/6282229344852?text=Halo%20Ica%20%26%20Dicky,%20saya%20ingin%20mengonfirmasi%20pengiriman%20kado...';
 
   // Cover Overlay Screen
   if (!isOpen) {
