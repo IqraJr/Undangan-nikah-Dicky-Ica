@@ -6,7 +6,11 @@
   --burgundy-medium: #9C140E;
   --burgundy-light: #C02D24;
   --burgundy-bg-trans: rgba(122, 12, 2, 0.08);
-  --burgundy-border-trans: rgba(122, 12, 2, 0.2);
+  --burgundy-border-trans: rgba(122, 12, 2, 0.15);
+
+  --gold-primary: #D4AF37;
+  --gold-light: #F8F1E5;
+  --gold-border-trans: rgba(212, 175, 55, 0.3);
 
   --cream-bg: #FAF7F2;
   --cream-dark: #EAE4D8;
@@ -39,7 +43,9 @@ body {
   margin: 0;
   padding: 0;
   overflow-x: hidden;
-  background-color: var(--cream-bg);
+  background-image: 
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60' viewBox='0 0 60 60'%3E%3Cpath d='M30 0 C33 10, 40 15, 40 20 C40 25, 35 30, 30 30 C25 30, 20 25, 20 20 C20 15, 27 10, 30 0 Z M0 30 C3 40, 10 45, 10 50 C10 55, 5 60, 0 60 C-5 60, -10 55, -10 50 C-10 45, -7 40, 0 30 Z M60 30 C63 40, 70 45, 70 50 C70 55, 65 60, 60 60 C55 60, 50 55, 50 50 C50 45, 53 40, 60 30 Z M30 60 C33 70, 40 75, 40 80 C40 85, 35 90, 30 90 C25 90, 20 85, 20 80 C20 75, 27 70, 30 60 Z' fill='%237a0c02' fill-opacity='0.02'/%3E%3C/svg%3E"),
+    radial-gradient(circle at 50% 30%, #FCFAF6 0%, #F5EFE4 100%);
 }
 
 /* Custom Scrollbar */
@@ -87,7 +93,7 @@ h1, h2, h3, h4, h5, h6 {
 .app-container {
   width: 100%;
   min-height: 100vh;
-  background-color: var(--cream-bg);
+  background-color: transparent;
   position: relative;
   padding-bottom: 90px; /* expanded spacing for bottom nav */
 }
@@ -180,19 +186,20 @@ h1, h2, h3, h4, h5, h6 {
 
 /* Section styling */
 .section {
-  padding: 56px 0;
+  padding: 24px 0;
   position: relative;
   text-align: center;
   width: 100%;
+  transition: padding 0.3s ease;
 }
 
 /* Zebra striping for desktop structure */
 .section:nth-of-type(even) {
-  background-color: #FAF7F2;
+  background-color: rgba(250, 247, 242, 0.4);
 }
 
 .section:nth-of-type(odd) {
-  background-color: #FFFFFF;
+  background-color: transparent;
 }
 
 .section-divider {
@@ -210,7 +217,7 @@ h1, h2, h3, h4, h5, h6 {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  background-color: inherit;
+  background-color: #FAF7F2;
   padding: 0 8px;
   font-size: 0.85rem;
 }
@@ -219,7 +226,7 @@ h1, h2, h3, h4, h5, h6 {
   background-color: #FAF7F2;
 }
 .section:nth-of-type(odd) .section-divider::before {
-  background-color: #FFFFFF;
+  background-color: #FCFAF6;
 }
 
 /* Custom Polaroid Style */
@@ -258,18 +265,23 @@ h1, h2, h3, h4, h5, h6 {
 
 /* Card Design */
 .card {
-  background-color: var(--cream-card);
+  background-color: rgba(255, 255, 255, 0.78);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   border-radius: 18px;
   padding: 24px;
-  box-shadow: 0 8px 24px rgba(122, 12, 2, 0.02);
-  border: 1px solid rgba(122, 12, 2, 0.04);
+  box-shadow: 0 8px 24px rgba(122, 12, 2, 0.03), 0 2px 8px rgba(212, 175, 55, 0.05);
+  border: 1px solid rgba(122, 12, 2, 0.08);
   margin-bottom: 20px;
   text-align: center;
-  transition: all 0.3s ease;
+  transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .card:hover {
-  box-shadow: 0 12px 30px rgba(122, 12, 2, 0.05);
+  transform: translateY(-2px);
+  background-color: rgba(255, 255, 255, 0.88);
+  box-shadow: 0 12px 30px rgba(122, 12, 2, 0.07), 0 4px 16px rgba(212, 175, 55, 0.12);
+  border-color: rgba(122, 12, 2, 0.15);
 }
 
 /* Form Styling */
@@ -453,6 +465,71 @@ h1, h2, h3, h4, h5, h6 {
   transition: all 0.3s ease;
 }
 
+@media (min-width: 768px) {
+  .bottom-nav {
+    display: none;
+  }
+  
+  .app-container {
+    padding-top: 80px; /* Push content down on desktop to clear top-nav */
+  }
+}
+
+/* Desktop Top Navbar */
+.top-nav {
+  display: none;
+}
+
+@media (min-width: 768px) {
+  .top-nav {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 90%;
+    max-width: 580px;
+    height: 52px;
+    background-color: rgba(255, 255, 255, 0.82);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(122, 12, 2, 0.15);
+    border-radius: 30px;
+    box-shadow: 0 8px 32px rgba(122, 12, 2, 0.06);
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    z-index: 998;
+    padding: 0 20px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+}
+
+.top-nav-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: none;
+  border: none;
+  color: var(--text-medium);
+  cursor: pointer;
+  padding: 6px 14px;
+  font-family: var(--font-playful);
+  font-size: 0.85rem;
+  font-weight: 600;
+  transition: all 0.2s ease;
+  border-radius: 20px;
+}
+
+.top-nav-item:hover {
+  color: var(--burgundy-primary);
+  background-color: rgba(122, 12, 2, 0.05);
+  transform: translateY(-1px);
+}
+
+.top-nav-item:active {
+  transform: translateY(0);
+}
+
 .nav-item {
   display: flex;
   flex-direction: column;
@@ -540,7 +617,489 @@ h1, h2, h3, h4, h5, h6 {
   animation: pulse 3s ease-in-out infinite;
 }
 
+/* Page Border Styles */
+.page-border-container {
+  top: 16px;
+  left: 16px;
+  right: 16px;
+  bottom: 16px;
+  transition: all 0.3s ease;
+}
+
+.border-corner svg {
+  width: 48px;
+  height: 48px;
+  transition: all 0.3s ease;
+}
+
+@media (max-width: 768px) {
+  .page-border-container {
+    top: 8px;
+    left: 8px;
+    right: 8px;
+    bottom: 8px;
+  }
+  
+  /* Select inner border element inside container */
+  .page-border-inner {
+    top: 2px !important;
+    left: 2px !important;
+    right: 2px !important;
+    bottom: 2px !important;
+  }
+  
+  .border-corner svg {
+    width: 32px;
+    height: 32px;
+  }
+}
+
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(12px); }
   to { opacity: 1; transform: translateY(0); }
 }
+
+/* Responsive Save the Date Title */
+.save-date-header {
+  font-size: 3.8rem !important;
+  transition: all 0.3s ease;
+}
+
+@media (max-width: 768px) {
+  .save-date-header {
+    font-size: 2.5rem !important;
+    letter-spacing: 2px !important;
+  }
+}
+
+/* DVD Disc Music Player Animation */
+.dvd-disc {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: 
+    radial-gradient(circle, 
+      #ffffff 12%, 
+      #b0b0b0 13%, 
+      var(--gold-primary) 14%, /* Gold inner ring */
+      transparent 18%, 
+      transparent 28%,
+      #3a3a3a 29%, 
+      #1e1e1e 70%
+    ),
+    conic-gradient(
+      from 0deg,
+      #7a7a7a 0deg,
+      #c0c0c0 35deg,
+      #ffccd0 70deg,   /* Soft pink reflection */
+      #fffae0 130deg,  /* Soft gold reflection */
+      #e0f7ff 190deg,  /* Soft blue reflection */
+      #ede6ff 250deg,  /* Soft purple reflection */
+      #c0c0c0 310deg,
+      #7a7a7a 360deg
+    );
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2), inset 0 1px 1px rgba(255, 255, 255, 0.1);
+  position: relative;
+  flex-shrink: 0;
+  animation: dvd-spin 3s linear infinite;
+  animation-play-state: paused;
+  transition: transform 0.3s ease;
+}
+
+/* Shiny plastic light reflection lines */
+.dvd-disc::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.22) 0%, rgba(255, 255, 255, 0) 45%, rgba(255, 255, 255, 0) 55%, rgba(255, 255, 255, 0.22) 100%);
+  pointer-events: none;
+}
+
+/* DVD Center Hole */
+.dvd-disc::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 7px;
+  height: 7px;
+  background-color: #FAF7F2; /* matches paper background */
+  border-radius: 50%;
+  border: 1px solid rgba(0, 0, 0, 0.25);
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.3);
+  z-index: 2;
+}
+
+.dvd-disc.spinning {
+  animation-play-state: running;
+}
+
+@keyframes dvd-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.inline-player-text {
+  font-size: 0.88rem;
+  color: var(--text-dark);
+  font-weight: 600;
+  letter-spacing: 0.3px;
+  flex-grow: 1;
+  text-align: left;
+  user-select: none;
+}
+
+/* Couple Section Decoration Enhancements */
+
+/* Wreath golden frame around polaroid wrapper */
+.polaroid-wrapper {
+  position: relative;
+}
+
+.polaroid-wreath {
+  animation: float 4s ease-in-out infinite;
+  animation-delay: -0.5s;
+}
+
+/* Instagram Capsule Link Buttons */
+.instagram-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 16px;
+  padding: 6px 14px;
+  border-radius: 20px;
+  border: 1px solid rgba(122, 12, 2, 0.15);
+  background-color: rgba(255, 255, 255, 0.6);
+  font-family: var(--font-sans);
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--burgundy-primary);
+  text-decoration: none;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 5;
+  position: relative;
+}
+
+.instagram-btn:hover {
+  background-color: var(--burgundy-primary);
+  color: #FFFFFF;
+  border-color: var(--burgundy-primary);
+  transform: translateY(-1.5px);
+  box-shadow: 0 4px 10px rgba(122, 12, 2, 0.12);
+}
+
+.instagram-btn svg {
+  flex-shrink: 0;
+}
+
+/* Profile card inner frames & corner brackets */
+.profile-card {
+  position: relative;
+  overflow: hidden;
+  padding-left: 38px !important;
+  padding-right: 38px !important;
+  transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.profile-card-inner-border {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  right: 8px;
+  bottom: 8px;
+  border: 1px dashed rgba(212, 175, 55, 0.35);
+  border-radius: 14px;
+  pointer-events: none;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.4);
+}
+
+/* Tiny gold corner brackets top-left & bottom-right */
+.profile-card-inner-border::before {
+  content: '';
+  position: absolute;
+  top: -4px;
+  left: -4px;
+  width: 12px;
+  height: 12px;
+  border-top: 2px solid var(--gold-primary);
+  border-left: 2px solid var(--gold-primary);
+  pointer-events: none;
+}
+
+.profile-card-inner-border::after {
+  content: '';
+  position: absolute;
+  bottom: -4px;
+  right: -4px;
+  width: 12px;
+  height: 12px;
+  border-bottom: 2px solid var(--gold-primary);
+  border-right: 2px solid var(--gold-primary);
+  pointer-events: none;
+}
+
+/* Gold Laurel Leaf Branches flanking card sides */
+.profile-leaf-left,
+.profile-leaf-right {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+  transition: all 0.3s ease;
+}
+
+.profile-leaf-left {
+  left: 12px;
+}
+
+.profile-leaf-right {
+  right: 12px;
+  transform: translateY(-50%) scaleX(-1);
+}
+
+/* Responsive adjustments for mobile layout spacing */
+@media (max-width: 768px) {
+  .section {
+    padding: 24px 0;
+  }
+  
+  .profile-card {
+    padding-left: 20px !important;
+    padding-right: 20px !important;
+  }
+  
+  .profile-leaf-left,
+  .profile-leaf-right {
+    display: none; /* Hide leaf line art on mobile to save space */
+  }
+}
+
+/* Inline Music Player Capsule Styles */
+.inline-music-player {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  width: 100%;
+  max-width: 320px;
+  margin: 16px auto 0 auto;
+  padding: 8px 16px;
+  border-radius: 40px;
+  background-color: rgba(255, 255, 255, 0.78);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1.5px solid rgba(122, 12, 2, 0.08);
+  box-shadow: 0 4px 16px rgba(122, 12, 2, 0.02), 0 2px 8px rgba(212, 175, 55, 0.04);
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.inline-music-player:hover {
+  transform: translateY(-2px) scale(1.01);
+  background-color: rgba(255, 255, 255, 0.88);
+  border-color: var(--burgundy-primary);
+  box-shadow: 0 8px 24px rgba(122, 12, 2, 0.06), 0 4px 12px rgba(212, 175, 55, 0.08);
+}
+
+.inline-music-player:active {
+  transform: scale(0.98);
+}
+
+.inline-play-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background-color: var(--burgundy-primary);
+  color: #FFFFFF;
+  border: none;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  flex-shrink: 0;
+  padding: 0;
+}
+
+.inline-music-player:hover .inline-play-btn {
+  transform: scale(1.08);
+  background-color: var(--burgundy-dark);
+  box-shadow: 0 2px 8px rgba(122, 12, 2, 0.2);
+}
+
+/* Polaroid Hover Overlay */
+.polaroid-frame:hover .hover-overlay {
+  opacity: 1 !important;
+}
+
+/* Event Section Premium Visual Enhancements */
+
+/* Animated Connecting Arrows pointing to Calendar D-Day */
+.event-arrow {
+  position: absolute;
+  pointer-events: none;
+  z-index: 5;
+  stroke: var(--gold-primary);
+}
+
+.desktop-arrow {
+  display: none;
+}
+
+.mobile-arrow {
+  display: none;
+}
+
+@media (min-width: 768px) {
+  .desktop-arrow {
+    display: block;
+    width: 60px;
+    height: 40px;
+    left: -68px;
+    top: 50%;
+    transform: translateY(-50%);
+    animation: arrow-slide-left 2s infinite ease-in-out;
+  }
+}
+
+@media (max-width: 767px) {
+  /* On mobile, only the first event card shows the arrow pointing up to the calendar */
+  .event-card:first-of-type .mobile-arrow {
+    display: block;
+    width: 40px;
+    height: 50px;
+    top: -54px;
+    left: 50%;
+    transform: translateX(-50%);
+    animation: arrow-slide-up 2s infinite ease-in-out;
+  }
+}
+
+@keyframes arrow-slide-left {
+  0% { transform: translateY(-50%) translateX(0); opacity: 0.65; }
+  50% { transform: translateY(-50%) translateX(-6px); opacity: 1; }
+  100% { transform: translateY(-50%) translateX(0); opacity: 0.65; }
+}
+
+@keyframes arrow-slide-up {
+  0% { transform: translateX(-50%) translateY(0); opacity: 0.65; }
+  50% { transform: translateX(-50%) translateY(-6px); opacity: 1; }
+  100% { transform: translateX(-50%) translateY(0); opacity: 0.65; }
+}
+
+/* Event Cards with Silhouette, Border, and 3D Perspective Hover */
+.event-card {
+  position: relative;
+  overflow: visible;
+  padding: 24px 28px !important;
+  perspective: 1000px;
+  transition: transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1), 
+              box-shadow 0.4s ease, 
+              border-color 0.4s ease, 
+              background-color 0.35s ease;
+}
+
+.event-card:hover {
+  transform: translateY(-5px) rotateX(2.5deg) rotateY(-2.5deg);
+  border-color: var(--gold-primary);
+  background-color: rgba(255, 255, 255, 0.92);
+  box-shadow: 0 16px 36px rgba(122, 12, 2, 0.06), 
+              0 6px 20px rgba(212, 175, 55, 0.15), 
+              0 0 16px rgba(212, 175, 55, 0.08);
+}
+
+/* Venue Silhouette Watermark SVG */
+.venue-silhouette {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 140px;
+  height: 140px;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.12; /* Adjust opacity dynamically to merge beautifully */
+  transition: all 0.4s ease;
+}
+
+.event-card:hover .venue-silhouette {
+  transform: translate(-50%, -50%) scale(1.05);
+  opacity: 0.18;
+}
+
+/* Card Inner Frame Borders */
+.event-card-inner-border {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  right: 8px;
+  bottom: 8px;
+  border: 1px dashed rgba(212, 175, 55, 0.25);
+  border-radius: 12px;
+  pointer-events: none;
+  z-index: 1;
+  transition: all 0.4s ease;
+}
+
+.event-card:hover .event-card-inner-border {
+  border-color: rgba(212, 175, 55, 0.5);
+  box-shadow: inset 0 0 8px rgba(212, 175, 55, 0.05);
+}
+
+/* Inner Frame Siku Brackets */
+.event-card-inner-border::before {
+  content: '';
+  position: absolute;
+  top: -4px;
+  left: -4px;
+  width: 10px;
+  height: 10px;
+  border-top: 2px solid var(--gold-primary);
+  border-left: 2px solid var(--gold-primary);
+  pointer-events: none;
+}
+
+.event-card-inner-border::after {
+  content: '';
+  position: absolute;
+  bottom: -4px;
+  right: -4px;
+  width: 10px;
+  height: 10px;
+  border-bottom: 2px solid var(--gold-primary);
+  border-right: 2px solid var(--gold-primary);
+  pointer-events: none;
+}
+
+/* Event Icon Micro-bounce Animation on Hover */
+.event-card-icon {
+  transition: transform 0.3s ease;
+  z-index: 2;
+}
+
+.event-card:hover .event-card-icon {
+  animation: icon-bounce 0.8s ease-in-out infinite alternate;
+}
+
+@keyframes icon-bounce {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(-4px);
+  }
+}
+
+
+

@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { Calendar, MapPin, Gift, Phone, Copy, Heart, BookOpen, Music, Home, Users, Image, MessageSquare, CheckCircle } from 'lucide-react';
+import { useState } from 'react';
+import { Calendar, MapPin, Gift, Phone, Copy, BookOpen, Home, Users, Image, MessageSquare, CheckCircle, Play, Pause } from 'lucide-react';
 import Countdown from './components/Countdown';
 import RSVPForm from './components/RSVPForm';
 import MusicPlayer from './components/MusicPlayer';
@@ -8,11 +8,40 @@ import TypingText from './components/TypingText';
 import ParticleBackground from './components/ParticleBackground';
 import PhotoGallery from './components/PhotoGallery';
 import ThreadDivider from './components/ThreadDivider';
+import PageBorder from './components/PageBorder';
+
+const Instagram = ({ size = 24, ...props }) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width={size}
+    height={size}
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    {...props}
+  >
+    <rect width="20" height="20" x="2" y="2" rx="5" ry="5" />
+    <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
+    <line x1="17.5" x2="17.51" y1="6.5" y2="6.5" />
+  </svg>
+);
 
 function App() {
   const [isOpen, setIsOpen] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
-  const [guestName, setGuestName] = useState('Sahabat & Kerabat');
+  const [guestName] = useState(() => {
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search);
+      const to = params.get('to');
+      if (to) {
+        return decodeURIComponent(to);
+      }
+    }
+    return 'Sahabat & Kerabat';
+  });
   const [copiedAccount, setCopiedAccount] = useState(null);
   const [toast, setToast] = useState(null);
 
@@ -21,15 +50,6 @@ function App() {
     { id: 'bni', bankName: 'BNI', number: '1277492834', holder: 'Annisa Rahmadani' },
     { id: 'bca', bankName: 'BCA', number: '7829402948', holder: 'Dicky Asa Dewa P.' }
   ];
-
-  useEffect(() => {
-    // Read query parameter 'to' for guest name
-    const params = new URLSearchParams(window.location.search);
-    const to = params.get('to');
-    if (to) {
-      setGuestName(decodeURIComponent(to));
-    }
-  }, []);
 
   const handleOpenInvitation = () => {
     setIsOpen(true);
@@ -67,14 +87,26 @@ function App() {
   if (!isOpen) {
     return (
       <div style={styles.coverOverlay} className="animate-fade-in">
+        <ParticleBackground />
+        <PageBorder />
         <div style={styles.coverCard}>
           <div style={styles.coverTagline} className="font-playful animate-float">
-            <span>✨ <TypingText text="THESE KIDS ARE GETTING MARRIED" speed={80} delay={600} /> ✨</span>
+            <span style={{ display: 'inline-flex', alignItems: 'center', gap: '10px' }}>
+              <span style={{ fontSize: '1.2rem' }}>✨</span>
+              <span style={{ display: 'inline-block', textAlign: 'center' }}>
+                <TypingText
+                  text={"  THESE KIDS\nARE GETTING\nMARRIED"}
+                  speed={80}
+                  delay={600}
+                />
+              </span>
+              <span style={{ fontSize: '1.2rem' }}>✨</span>
+            </span>
           </div>
 
           <div style={styles.coverIllustration}>
             <img
-              src="./extracted_images/X10_1.png"
+              src="./extracted_images/profil1.png"
               alt="Dicky and Ica Childhood Illustration"
               style={styles.coupleImage}
             />
@@ -98,32 +130,100 @@ function App() {
 
   // Main Page Content
   return (
-    <div className="app-container animate-fade-in" id="home">
+    <>
       {/* Background canvas particles */}
       <ParticleBackground />
 
+      {/* Page Border Overlay */}
+      <PageBorder />
+
+      {/* Floating/Fixed Desktop Top Nav Bar */}
+      <div className="top-nav">
+        <button onClick={() => scrollToSection('home')} className="top-nav-item">
+          <Home size={18} />
+          <span>Cover</span>
+        </button>
+        <button onClick={() => scrollToSection('couple')} className="top-nav-item">
+          <Users size={18} />
+          <span>Profil</span>
+        </button>
+        <button onClick={() => scrollToSection('event')} className="top-nav-item">
+          <Calendar size={18} />
+          <span>Acara</span>
+        </button>
+        <button onClick={() => scrollToSection('gallery')} className="top-nav-item">
+          <Image size={18} />
+          <span>Galeri</span>
+        </button>
+        <button onClick={() => scrollToSection('rsvp')} className="top-nav-item">
+          <MessageSquare size={18} />
+          <span>RSVP</span>
+        </button>
+        <button onClick={() => scrollToSection('gift')} className="top-nav-item">
+          <Gift size={18} />
+          <span>Gift</span>
+        </button>
+      </div>
+
       <MusicPlayer isPlaying={isPlaying} setIsPlaying={setIsPlaying} />
+
+      <div className="app-container animate-fade-in" id="home">
 
       {/* Hero Section */}
       <section className="section">
         <div className="section-content">
           <ScrollReveal>
-            <div className="font-playful" style={styles.saveDateHeader}>SAVE THE DATE!</div>
+            <div className="font-playful save-date-header" style={styles.saveDateHeader}>
+              <TypingText
+                text={"  SAVE\nTHE\nDATE!"}
+                speed={120}
+                delay={400}
+                triggerOnScroll={true}
+              />
+            </div>
+
+            {/* Hands Illustration decoration */}
+            <div style={styles.handsContainer}>
+              <img 
+                src="./extracted_images/tangan.png" 
+                alt="Save the Date Illustration" 
+                style={styles.handsImage}
+                className="animate-float"
+              />
+            </div>
 
             {/* Quran Verse */}
             <div style={styles.verseCard} className="card">
-              <p style={styles.verseArabic} className="font-serif">
-                وَمِنْ اٰيٰتِهٖٓ اَنْ خَلَقَ لَكُمْ مِّنْ اَنْفُسِكُمْ اَzْوَاجًا لِّتَسْكُنُوْٓا اِلَيْهَا وَجَعَلَ بَيْنَكُمْ مَّوَدَّةً وَّرَحْمَةً ۗاِنَّ فِيْ ذٰلِكَ لَاٰيٰتٍ لِّقَوْمٍ يَّتَفَكَّرُوْنَ
-              </p>
               <p style={styles.verseTranslation}>
                 <TypingText
-                  text="“Di antara tanda-tanda (kebesaran)-Nya ialah bahwa Dia menciptakan pasangan-pasangan untukmu dari (jenis) dirimu sendiri agar kamu cenderung dan merasa tenteram kepadanya, dan Dia menjadikan di antaramu rasa cinta dan kasih sayang. Sesungguhnya pada yang demikian itu benar-benar terdapat tanda-tanda (kebesaran Allah) bagi kaum yang berpikir.”"
-                  speed={15}
+                  text={`“ Di antara tanda-tanda (kebesaran)-Nya ialah bahwa
+Dia menciptakan pasangan-pasangan untukmu dari
+(jenis) dirimu sendiri agar kamu cenderung dan
+merasa tenteram kepadanya, dan Dia menjadikan di
+antaramu rasa cinta dan kasih sayang. Sesungguhnya
+pada yang demikian itu benar-benar terdapat tanda-
+tanda (kebesaran Allah) bagi kaum yang berpikir.”`}
+                  speed={38}
                   delay={400}
                   triggerOnScroll={true}
                 />
               </p>
               <span style={styles.verseRef} className="font-playful">QS Ar-Rum: 21</span>
+            </div>
+
+            {/* Pemutar Musik Latar (Inline Music Player Capsule) */}
+            <div 
+              className="inline-music-player animate-pulse-slow" 
+              onClick={() => setIsPlaying(!isPlaying)}
+              title={isPlaying ? "Klik untuk Menjeda Musik" : "Klik untuk Memutar Musik"}
+            >
+              <button className="inline-play-btn" aria-label={isPlaying ? "Jeda Musik" : "Putar Musik"}>
+                {isPlaying ? <Pause size={14} fill="currentColor" /> : <Play size={14} fill="currentColor" />}
+              </button>
+              <span className="inline-player-text font-playful">
+                {isPlaying ? "Memutar Musik Latar 🎵" : "Putar Musik Latar 🔇"}
+              </span>
+              <div className={`dvd-disc ${isPlaying ? 'spinning' : ''}`} />
             </div>
 
             <ThreadDivider />
@@ -135,44 +235,115 @@ function App() {
       <section className="section" id="couple">
         <div className="section-content">
           <ScrollReveal>
-            <h2 style={styles.sectionTitle} className="font-playful">Bride & Groom</h2>
-
-            <div style={{ margin: '16px 0 32px 0' }}>
-              <div className="polaroid-frame" style={styles.polaroidContainer}>
-                <img
-                  src="./extracted_images/X18_2.png"
-                  alt="Dicky and Ica"
-                  style={styles.polaroidImg}
-                />
-                <div className="caption">Dicky & Ica</div>
-              </div>
+            {/* Bismillah Calligraphy */}
+            <div style={styles.bismillahContainer}>
+              <img 
+                src="./extracted_images/kaligrafi.png" 
+                alt="Bismillah" 
+                style={styles.bismillahImage}
+              />
             </div>
 
             <p style={styles.introGreeting}>
               Assalamu'alaikum Warahmatullahi Wabarakatuh<br /><br />
-              Dengan memohon rahmat dan ridho Allah SWT, kami bermaksud mengundang Bapak/Ibu/Saudara/i untuk menghadiri pernikahan kami:
-            </p>
+              Dengan memohon rahmat dan ridho Allah SWT,<br></br>
 
+kami bermaksud mengundang Bapak/Ibu/Saudara/i <br></br>
+untuk menghadiri pernikahan kami
+            </p>
+            <h2 style={styles.sectionTitle} className="font-playful">Bride & Groom</h2>
+
+            <div style={{ margin: '32px 0 40px 0', display: 'flex', justifyContent: 'center' }}>
+              <div className="polaroid-wrapper animate-float" style={styles.polaroidWrapper}>
+                {/* Wreath Emas SVG */}
+                <svg className="polaroid-wreath" viewBox="0 0 100 100" style={styles.wreathSvg} xmlns="http://www.w3.org/2000/svg">
+                  {/* Outer dotted gold ring */}
+                  <circle cx="50" cy="50" r="46" stroke="var(--gold-primary)" strokeWidth="1" strokeDasharray="3 3" opacity="0.55" fill="none" />
+                  {/* Inner gold ring */}
+                  <circle cx="50" cy="50" r="43" stroke="var(--gold-primary)" strokeWidth="0.8" opacity="0.35" fill="none" />
+                  {/* Curved botanical branches flanking left and right */}
+                  <path d="M 50 93 C 26 93 7 74 7 50 C 7 26 26 7 50 7" stroke="var(--gold-primary)" strokeWidth="1.2" fill="none" opacity="0.65" strokeLinecap="round" />
+                  <path d="M 50 93 C 74 93 93 74 93 50 C 93 26 74 7 50 7" stroke="var(--gold-primary)" strokeWidth="1.2" fill="none" opacity="0.65" strokeLinecap="round" />
+                  {/* Leaf clusters along the paths */}
+                  <path d="M 12 62 Q 8 60, 9 66 M 88 62 Q 92 60, 91 66" fill="none" stroke="var(--gold-primary)" strokeWidth="1.2" opacity="0.6" />
+                  <path d="M 21 82 Q 18 78, 22 83 M 79 82 Q 82 78, 78 83" fill="none" stroke="var(--gold-primary)" strokeWidth="1.2" opacity="0.6" />
+                  <path d="M 9 40 Q 5 42, 8 46 M 91 40 Q 95 42, 92 46" fill="none" stroke="var(--gold-primary)" strokeWidth="1.2" opacity="0.6" />
+                  <path d="M 22 17 Q 19 21, 23 23 M 78 17 Q 81 21, 77 23" fill="none" stroke="var(--gold-primary)" strokeWidth="1.2" opacity="0.6" />
+                  {/* Sparkling mini dots */}
+                  <circle cx="50" cy="7" r="2.5" fill="var(--gold-primary)" opacity="0.8" />
+                  <circle cx="50" cy="93" r="2.5" fill="var(--gold-primary)" opacity="0.8" />
+                </svg>
+
+                <div className="polaroid-frame" style={styles.polaroidContainer}>
+                  <img
+                    src="./extracted_images/X18_2.png"
+                    alt="Dicky and Ica"
+                    style={styles.polaroidImg}
+                  />
+                  <div className="caption">Dicky & Ica</div>
+                </div>
+              </div>
+            </div>
             {/* Profiles in a 2-column grid on desktop */}
             <div className="grid-2">
               {/* Bride */}
-              <div className="card" style={styles.profileCard}>
+              <div className="card profile-card" style={styles.profileCard}>
+                {/* Gold Laurel Leaf Branches */}
+                <svg className="profile-leaf-left" width="18" height="50" viewBox="0 0 20 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M10 50 C10 32, 2 22, 2 12 M10 42 C10 28, 18 20, 18 10 M10 32 C6 22, 2 17, 2 7 M10 22 C12 12, 18 10, 18 3 M10 60 L10 0" stroke="var(--gold-primary)" strokeWidth="1.2" strokeLinecap="round" opacity="0.65" />
+                </svg>
+                <svg className="profile-leaf-right" width="18" height="50" viewBox="0 0 20 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M10 50 C10 32, 2 22, 2 12 M10 42 C10 28, 18 20, 18 10 M10 32 C6 22, 2 17, 2 7 M10 22 C12 12, 18 10, 18 3 M10 60 L10 0" stroke="var(--gold-primary)" strokeWidth="1.2" strokeLinecap="round" opacity="0.65" />
+                </svg>
+
+                {/* Card Corner Borders inside */}
+                <div className="profile-card-inner-border"></div>
+
                 <h3 style={styles.profileName} className="font-playful">Annisa Rahmadani, S.Pd. (Ica)</h3>
                 <p style={styles.parents}>
                   Putri dari<br />
                   <strong>Bapak Lahati</strong><br />
                   dan <strong>Almh. Ibu Suniyati</strong>
                 </p>
+                <a 
+                  href="https://instagram.com/annisarhmdni_" 
+                  target="_blank" 
+                  rel="noopener noreferrer" 
+                  className="instagram-btn"
+                >
+                  <Instagram size={14} />
+                  <span>@annisarhmdni_</span>
+                </a>
               </div>
 
               {/* Groom */}
-              <div className="card" style={styles.profileCard}>
+              <div className="card profile-card" style={styles.profileCard}>
+                {/* Gold Laurel Leaf Branches */}
+                <svg className="profile-leaf-left" width="18" height="50" viewBox="0 0 20 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M10 50 C10 32, 2 22, 2 12 M10 42 C10 28, 18 20, 18 10 M10 32 C6 22, 2 17, 2 7 M10 22 C12 12, 18 10, 18 3 M10 60 L10 0" stroke="var(--gold-primary)" strokeWidth="1.2" strokeLinecap="round" opacity="0.65" />
+                </svg>
+                <svg className="profile-leaf-right" width="18" height="50" viewBox="0 0 20 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M10 50 C10 32, 2 22, 2 12 M10 42 C10 28, 18 20, 18 10 M10 32 C6 22, 2 17, 2 7 M10 22 C12 12, 18 10, 18 3 M10 60 L10 0" stroke="var(--gold-primary)" strokeWidth="1.2" strokeLinecap="round" opacity="0.65" />
+                </svg>
+
+                {/* Card Corner Borders inside */}
+                <div className="profile-card-inner-border"></div>
+
                 <h3 style={styles.profileName} className="font-playful">Dicky Asa Dewa Pitaloeka, S.Kom. (Dicky)</h3>
                 <p style={styles.parents}>
                   Putra dari<br />
                   <strong>Bapak Pitono</strong><br />
                   dan <strong>Ibu Ludia Kabolo</strong>
                 </p>
+                <a 
+                  href="https://instagram.com/dickyasadevap" 
+                  target="_blank" 
+                  rel="noopener noreferrer" 
+                  className="instagram-btn"
+                >
+                  <Instagram size={14} />
+                  <span>@dickyasadevap</span>
+                </a>
               </div>
             </div>
 
@@ -228,9 +399,31 @@ function App() {
               {/* Event Cards */}
               <div style={{ width: '100%' }}>
                 {/* Akad */}
-                <div className="card" style={styles.eventCard}>
+                <div className="card event-card" style={styles.eventCard}>
+                  {/* Wedding Venue Silhouette Watermark */}
+                  <svg className="venue-silhouette" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M20 80 H80 M30 80 V45 Q50 25 70 45 V80 M50 25 V15 M45 15 H55 M50 10 V15" stroke="var(--gold-primary)" strokeWidth="1.2" strokeLinecap="round" opacity="0.3" />
+                    <path d="M38 80 V55 H62 V80 M50 55 V80" stroke="var(--gold-primary)" strokeWidth="1" opacity="0.25" />
+                    <path d="M30 45 H70" stroke="var(--gold-primary)" strokeWidth="1" opacity="0.2" />
+                  </svg>
+
+                  {/* Connecting Arrows pointing to Calendar */}
+                  {/* Desktop arrow (floated left, points left) */}
+                  <svg className="event-arrow desktop-arrow" viewBox="0 0 60 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M50 12 Q25 5 12 25" stroke="var(--gold-primary)" strokeWidth="2" strokeDasharray="3 3" strokeLinecap="round" />
+                    <path d="M18 25 L12 25 L14 19" stroke="var(--gold-primary)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
+                  {/* Mobile arrow (floated top, points up) */}
+                  <svg className="event-arrow mobile-arrow" viewBox="0 0 40 50" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M20 42 Q30 22 15 8" stroke="var(--gold-primary)" strokeWidth="2" strokeDasharray="3 3" strokeLinecap="round" />
+                    <path d="M10 14 L15 8 L21 10" stroke="var(--gold-primary)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
+                  
+                  {/* Inner gold frame and brackets */}
+                  <div className="event-card-inner-border"></div>
+
                   <div style={styles.cardHeader}>
-                    <Calendar size={20} color="#7A0C02" />
+                    <Calendar size={20} color="#7A0C02" className="event-card-icon" />
                     <h3 style={styles.eventCardTitle} className="font-playful">Akad Nikah</h3>
                   </div>
                   <p style={styles.eventDetail}>
@@ -242,9 +435,26 @@ function App() {
                 </div>
 
                 {/* Resepsi */}
-                <div className="card" style={styles.eventCard}>
+                <div className="card event-card" style={styles.eventCard}>
+                  {/* Wedding Venue Silhouette Watermark */}
+                  <svg className="venue-silhouette" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M20 80 H80 M30 80 V45 Q50 25 70 45 V80 M50 25 V15 M45 15 H55 M50 10 V15" stroke="var(--gold-primary)" strokeWidth="1.2" strokeLinecap="round" opacity="0.3" />
+                    <path d="M38 80 V55 H62 V80 M50 55 V80" stroke="var(--gold-primary)" strokeWidth="1" opacity="0.25" />
+                    <path d="M30 45 H70" stroke="var(--gold-primary)" strokeWidth="1" opacity="0.2" />
+                  </svg>
+
+                  {/* Connecting Arrows pointing to Calendar */}
+                  {/* Desktop arrow (floated left, points left) */}
+                  <svg className="event-arrow desktop-arrow" viewBox="0 0 60 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M50 28 Q25 35 12 15" stroke="var(--gold-primary)" strokeWidth="2" strokeDasharray="3 3" strokeLinecap="round" />
+                    <path d="M14 21 L12 15 L18 15" stroke="var(--gold-primary)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
+
+                  {/* Inner gold frame and brackets */}
+                  <div className="event-card-inner-border"></div>
+
                   <div style={styles.cardHeader}>
-                    <Calendar size={20} color="#7A0C02" />
+                    <Calendar size={20} color="#7A0C02" className="event-card-icon" />
                     <h3 style={styles.eventCardTitle} className="font-playful">Resepsi</h3>
                   </div>
                   <p style={styles.eventDetail}>
@@ -396,31 +606,37 @@ function App() {
         </div>
       )}
 
-      {/* Floating IOS style bottom nav bar */}
-      <div className="bottom-nav">
-        <button onClick={() => scrollToSection('home')} className="nav-item">
-          <Home size={20} />
-          <span>Cover</span>
-        </button>
-        <button onClick={() => scrollToSection('couple')} className="nav-item">
-          <Users size={20} />
-          <span>Profil</span>
-        </button>
-        <button onClick={() => scrollToSection('event')} className="nav-item">
-          <Calendar size={20} />
-          <span>Acara</span>
-        </button>
-        <button onClick={() => scrollToSection('gallery')} className="nav-item">
-          <Image size={20} />
-          <span>Galeri</span>
-        </button>
-        <button onClick={() => scrollToSection('rsvp')} className="nav-item">
-          <MessageSquare size={20} />
-          <span>RSVP</span>
-        </button>
-      </div>
     </div>
-  );
+
+    {/* Floating IOS style bottom nav bar */}
+    <div className="bottom-nav">
+      <button onClick={() => scrollToSection('home')} className="nav-item">
+        <Home size={20} />
+        <span>Cover</span>
+      </button>
+      <button onClick={() => scrollToSection('couple')} className="nav-item">
+        <Users size={20} />
+        <span>Profil</span>
+      </button>
+      <button onClick={() => scrollToSection('event')} className="nav-item">
+        <Calendar size={20} />
+        <span>Acara</span>
+      </button>
+      <button onClick={() => scrollToSection('gallery')} className="nav-item">
+        <Image size={20} />
+        <span>Galeri</span>
+      </button>
+      <button onClick={() => scrollToSection('rsvp')} className="nav-item">
+        <MessageSquare size={20} />
+        <span>RSVP</span>
+      </button>
+      <button onClick={() => scrollToSection('gift')} className="nav-item">
+        <Gift size={20} />
+        <span>Gift</span>
+      </button>
+    </div>
+  </>
+);
 }
 
 const styles = {
@@ -430,7 +646,7 @@ const styles = {
     left: 0,
     right: 0,
     bottom: 0,
-    backgroundColor: '#FAF7F2',
+    backgroundColor: 'transparent',
     zIndex: 9999,
     display: 'flex',
     justifyContent: 'center',
@@ -441,19 +657,26 @@ const styles = {
   coverCard: {
     width: '100%',
     maxWidth: '450px',
-    backgroundColor: '#FAF7F2',
+    backgroundColor: 'rgba(255, 255, 255, 0.82)',
+    backdropFilter: 'blur(12px)',
+    WebkitBackdropFilter: 'blur(12px)',
+    border: '1px solid rgba(122, 12, 2, 0.08)',
+    borderRadius: '24px',
+    boxShadow: '0 12px 32px rgba(122, 12, 2, 0.04), 0 2px 8px rgba(212, 175, 55, 0.08)',
     textAlign: 'center',
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
-    padding: '24px',
+    padding: '32px 24px',
   },
   coverTagline: {
-    fontSize: '0.95rem',
-    fontWeight: 'bold',
+    fontSize: '1.35rem',
+    fontWeight: '800',
     color: '#7A0C02',
-    letterSpacing: '1px',
+    letterSpacing: '2px',
+    lineHeight: '1.4',
     marginBottom: '20px',
+    whiteSpace: 'pre-line',
   },
   coverIllustration: {
     width: '180px',
@@ -462,11 +685,15 @@ const styles = {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
+    position: 'relative',
   },
   coupleImage: {
-    maxWidth: '100%',
-    maxHeight: '100%',
+    width: '480px',
+    height: '360px',
+    maxWidth: 'none',
+    maxHeight: 'none',
     objectFit: 'contain',
+    position: 'absolute',
   },
   coverNames: {
     fontSize: '2.8rem',
@@ -480,14 +707,14 @@ const styles = {
     marginBottom: '24px',
   },
   guestBox: {
-    backgroundColor: '#FFFFFF',
-    border: '1px solid #EAE4D8',
+    backgroundColor: 'rgba(255, 255, 255, 0.85)',
+    border: '1px solid rgba(122, 12, 2, 0.1)',
     borderRadius: '16px',
     padding: '16px 24px',
     width: '100%',
     maxWidth: '320px',
     marginBottom: '24px',
-    boxShadow: '0 4px 12px rgba(122, 12, 2, 0.02)',
+    boxShadow: '0 4px 16px rgba(122, 12, 2, 0.02)',
   },
   guestLabel: {
     fontSize: '0.9rem',
@@ -501,16 +728,33 @@ const styles = {
     fontWeight: '600',
   },
   saveDateHeader: {
-    fontSize: '2.2rem',
+    fontSize: '3.6rem',
     fontWeight: 'bold',
     color: '#7A0C02',
-    letterSpacing: '2px',
+    letterSpacing: '4px',
     marginBottom: '24px',
-    lineHeight: '1.2',
+    lineHeight: '1.3',
+    whiteSpace: 'pre-line',
+    textShadow: '0 2px 10px rgba(122, 12, 2, 0.05)',
+  },
+  handsContainer: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    margin: '12px 0 24px 0',
+    width: '100%',
+  },
+  handsImage: {
+    width: '100%',
+    maxWidth: '480px',
+    height: 'auto',
+    opacity: 0.95,
   },
   verseCard: {
-    padding: '24px 20px',
-    lineHeight: '1.6',
+    padding: '28px 24px',
+    lineHeight: '1.8',
+    maxWidth: '520px',
+    margin: '0 auto 20px auto',
   },
   verseArabic: {
     fontSize: '1.5rem',
@@ -520,22 +764,54 @@ const styles = {
     lineHeight: '1.8',
   },
   verseTranslation: {
-    fontSize: '1.05rem',
+    fontSize: '1.12rem',
     fontStyle: 'italic',
     color: '#5C4B49',
     marginBottom: '12px',
-    lineHeight: '1.6',
+    lineHeight: '1.85',
+    letterSpacing: '0.3px',
+    whiteSpace: 'pre-line',
   },
   verseRef: {
     fontSize: '0.95rem',
     color: '#7A0C02',
     fontWeight: 'bold',
   },
+  polaroidWrapper: {
+    position: 'relative',
+    display: 'inline-block',
+    padding: '24px',
+    margin: '0 auto',
+  },
+  wreathSvg: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    width: '100%',
+    height: '100%',
+    zIndex: -1,
+    transform: 'scale(1.15)',
+    pointerEvents: 'none',
+  },
   polaroidContainer: {
     width: '260px',
+    marginBottom: 0,
   },
   polaroidImg: {
     borderRadius: '4px',
+  },
+  bismillahContainer: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    margin: '-50px auto 20px auto',
+    width: '100%',
+  },
+  bismillahImage: {
+    maxWidth: '220px',
+    width: '100%',
+    height: 'auto',
+    opacity: 0.85,
   },
   introGreeting: {
     fontSize: '1rem',

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 
 const TypingText = ({ text, speed = 40, delay = 300, triggerOnScroll = false }) => {
   const [displayedText, setDisplayedText] = useState('');
@@ -42,8 +42,10 @@ const TypingText = ({ text, speed = 40, delay = 300, triggerOnScroll = false }) 
     let timer;
     let currentIndex = 0;
 
-    // Clear text before starting typing
-    setDisplayedText('');
+    // Clear text asynchronously to avoid React setState warnings
+    const resetTimer = setTimeout(() => {
+      setDisplayedText('');
+    }, 0);
 
     timer = setInterval(() => {
       if (currentIndex < text.length) {
@@ -54,42 +56,17 @@ const TypingText = ({ text, speed = 40, delay = 300, triggerOnScroll = false }) 
       }
     }, speed);
 
-    return () => clearInterval(timer);
+    return () => {
+      clearTimeout(resetTimer);
+      clearInterval(timer);
+    };
   }, [start, text, speed]);
 
   return (
     <span ref={containerRef}>
       {displayedText}
-      {displayedText.length < text.length && start && (
-        <span style={styles.cursor} className="typing-cursor">|</span>
-      )}
     </span>
   );
 };
-
-const styles = {
-  cursor: {
-    display: 'inline-block',
-    animation: 'blink 0.8s step-end infinite',
-    color: '#7A0C02',
-    fontWeight: 'bold',
-    marginLeft: '2px',
-  }
-};
-
-// Insert cursor blink keyframes dynamically if not present
-if (typeof document !== 'undefined') {
-  const styleSheet = document.styleSheets[0];
-  if (styleSheet) {
-    try {
-      styleSheet.insertRule(`
-        @keyframes blink {
-          from, to { opacity: 0; }
-          50% { opacity: 1; }
-        }
-      `, styleSheet.cssRules.length);
-    } catch (e) {}
-  }
-}
 
 export default TypingText;

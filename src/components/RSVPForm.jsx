@@ -1,51 +1,52 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Check, X, Send } from 'lucide-react';
 
+// Default initial wishes
+const INITIAL_WISHES = [
+  {
+    id: 1,
+    name: 'Tante Dina',
+    wishes: 'Selamat menempuh hidup baru Dicky & Ica! Semoga sakinah mawaddah warahmah. Aamiin.',
+    presence: 'hadir',
+    date: '2026-06-01T10:00:00.000Z'
+  },
+  {
+    id: 2,
+    name: 'Sarah Amalia',
+    wishes: 'Happy wedding Kak Ica dan Mas Dicky! Lancar-lancar sampai hari H. Doa terbaik untuk kalian berdua ya!',
+    presence: 'hadir',
+    date: '2026-06-01T14:30:00.000Z'
+  },
+  {
+    id: 3,
+    name: 'Rian Pratama',
+    wishes: 'Wah selamat ya bro Dicky! Akhirnya sah juga. Semoga berbahagia selalu dengan Ica!',
+    presence: 'hadir',
+    date: '2026-06-01T18:15:00.000Z'
+  }
+];
+
 const RSVPForm = ({ defaultGuestName }) => {
-  const [name, setName] = useState('');
+  const [name, setName] = useState(defaultGuestName || '');
   const [wishes, setWishes] = useState('');
   const [presence, setPresence] = useState('hadir');
-  const [guestWishes, setGuestWishes] = useState([]);
+  const [guestWishes, setGuestWishes] = useState(() => {
+    const savedWishes = localStorage.getItem('wedding_wishes');
+    if (savedWishes) {
+      try {
+        return JSON.parse(savedWishes);
+      } catch (e) {
+        console.error("Failed to parse saved wishes", e);
+      }
+    }
+    return INITIAL_WISHES;
+  });
   const [submitted, setSubmitted] = useState(false);
-
-  // Default initial wishes
-  const initialWishes = [
-    {
-      id: 1,
-      name: 'Tante Dina',
-      wishes: 'Selamat menempuh hidup baru Dicky & Ica! Semoga sakinah mawaddah warahmah. Aamiin.',
-      presence: 'hadir',
-      date: '2026-06-01T10:00:00.000Z'
-    },
-    {
-      id: 2,
-      name: 'Sarah Amalia',
-      wishes: 'Happy wedding Kak Ica dan Mas Dicky! Lancar-lancar sampai hari H. Doa terbaik untuk kalian berdua ya!',
-      presence: 'hadir',
-      date: '2026-06-01T14:30:00.000Z'
-    },
-    {
-      id: 3,
-      name: 'Rian Pratama',
-      wishes: 'Wah selamat ya bro Dicky! Akhirnya sah juga. Semoga berbahagia selalu dengan Ica!',
-      presence: 'hadir',
-      date: '2026-06-01T18:15:00.000Z'
-    }
-  ];
-
-  useEffect(() => {
-    if (defaultGuestName) {
-      setName(defaultGuestName);
-    }
-  }, [defaultGuestName]);
 
   useEffect(() => {
     const savedWishes = localStorage.getItem('wedding_wishes');
-    if (savedWishes) {
-      setGuestWishes(JSON.parse(savedWishes));
-    } else {
-      setGuestWishes(initialWishes);
-      localStorage.setItem('wedding_wishes', JSON.stringify(initialWishes));
+    if (!savedWishes) {
+      localStorage.setItem('wedding_wishes', JSON.stringify(INITIAL_WISHES));
     }
   }, []);
 

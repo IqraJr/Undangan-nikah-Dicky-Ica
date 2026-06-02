@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 
 const ParticleBackground = () => {
   const canvasRef = useRef(null);
@@ -14,13 +14,7 @@ const ParticleBackground = () => {
     let particles = [];
     
     // Configs
-    const particleCount = 25; // Keep it low for performance
-    const colors = [
-      'rgba(122, 12, 2, 0.15)',  // Burgundy soft
-      'rgba(192, 45, 36, 0.12)',  // Burgundy light
-      'rgba(243, 236, 224, 0.6)', // Cream sparkle
-      'rgba(212, 175, 55, 0.25)', // Gold sparkle
-    ];
+    const particleCount = 40; // Perfect balance for rich visual and 60FPS performance
 
     const resizeCanvas = () => {
       canvas.width = window.innerWidth;
@@ -30,31 +24,86 @@ const ParticleBackground = () => {
     window.addEventListener('resize', resizeCanvas);
     resizeCanvas();
 
-    // Create particles
+    // Create particles class
     class Particle {
-      constructor() {
+      constructor(isInitial = false) {
         this.x = Math.random() * canvas.width;
-        this.y = Math.random() * canvas.height - canvas.height;
-        this.size = Math.random() * 5 + 3;
-        this.speedX = Math.random() * 0.5 - 0.25;
-        this.speedY = Math.random() * 0.8 + 0.4;
-        this.color = colors[Math.floor(Math.random() * colors.length)];
-        this.rotation = Math.random() * 360;
-        this.rotationSpeed = Math.random() * 0.5 - 0.25;
-        // Shape: 0 = petal/ellipse, 1 = star/circle
-        this.shapeType = Math.random() > 0.6 ? 1 : 0;
+        // Spread particles vertically on load, otherwise start them above screen
+        this.y = isInitial ? Math.random() * canvas.height : -20;
+        
+        // 60% petals, 40% sparkles
+        this.type = Math.random() > 0.45 ? 'petal' : 'sparkle';
+        
+        if (this.type === 'petal') {
+          this.size = Math.random() * 8 + 6;
+          this.speedX = Math.random() * 0.3 - 0.15;
+          this.speedY = Math.random() * 0.5 + 0.45; // Gentle fall
+          
+          // Mix of burgundy and soft pink tones
+          const petalColors = [
+            'rgba(122, 12, 2, 0.18)',   // Burgundy soft
+            'rgba(192, 45, 36, 0.14)',   // Burgundy light
+            'rgba(224, 150, 155, 0.22)', // Blush rose pink
+            'rgba(243, 220, 222, 0.25)', // White rose blush
+          ];
+          this.color = petalColors[Math.floor(Math.random() * petalColors.length)];
+          
+          this.rotation = Math.random() * 360;
+          this.rotationSpeed = Math.random() * 1.2 - 0.6;
+          
+          // 3D rotation variables
+          this.rotationY = Math.random() * Math.PI;
+          this.rotationYSpeed = Math.random() * 0.02 + 0.015;
+          
+          // Sine wave offset for wind drift
+          this.windOffset = Math.random() * 100;
+        } else {
+          // Sparkle configs
+          this.size = Math.random() * 2.5 + 1.5;
+          this.speedX = Math.random() * 0.15 - 0.075;
+          this.speedY = Math.random() * 0.3 + 0.2; // Slower drift
+          
+          // Gold base color, opacity will be dynamic
+          this.color = 'rgba(212, 175, 55, '; 
+          this.baseOpacity = Math.random() * 0.45 + 0.25;
+          this.opacity = this.baseOpacity;
+          this.twinkleSpeed = Math.random() * 0.04 + 0.02;
+          this.time = Math.random() * 100;
+        }
       }
 
       update() {
-        this.x += this.speedX + Math.sin(this.y / 30) * 0.15; // Swirling drift
-        this.y += this.speedY;
-        this.rotation += this.rotationSpeed;
+        if (this.type === 'petal') {
+          // Wind swing using sine wave
+          this.x += this.speedX + Math.sin(this.y / 45 + this.windOffset) * 0.35;
+          this.y += this.speedY;
+          this.rotation += this.rotationSpeed;
+          this.rotationY += this.rotationYSpeed;
 
-        if (this.y > canvas.height) {
-          this.y = -20;
-          this.x = Math.random() * canvas.width;
-          this.speedY = Math.random() * 0.8 + 0.4;
+          // Recycle petal when it goes off screen
+          if (this.y > canvas.height + 20) {
+            this.reset();
+          }
+        } else {
+          // Sparkle drift
+          this.x += this.speedX + Math.sin(this.y / 60) * 0.1;
+          this.y += this.speedY;
+          
+          // Twinkle effect (sine wave opacity oscillation)
+          this.time += this.twinkleSpeed;
+          this.opacity = this.baseOpacity + Math.sin(this.time) * 0.2;
+          
+          // Clamp opacity limits
+          if (this.opacity < 0.15) this.opacity = 0.15;
+          if (this.opacity > 0.8) this.opacity = 0.8;
+
+          // Recycle sparkle when off screen
+          if (this.y > canvas.height + 10) {
+            this.reset();
+          }
         }
+
+        // Screen boundary wrap for horizontal movement
         if (this.x > canvas.width) {
           this.x = 0;
         } else if (this.x < 0) {
@@ -62,28 +111,56 @@ const ParticleBackground = () => {
         }
       }
 
+      reset() {
+        this.y = -20;
+        this.x = Math.random() * canvas.width;
+        if (this.type === 'petal') {
+          this.speedY = Math.random() * 0.5 + 0.45;
+          this.rotationY = 0;
+        } else {
+          this.speedY = Math.random() * 0.3 + 0.2;
+        }
+      }
+
       draw() {
         ctx.save();
         ctx.translate(this.x, this.y);
-        ctx.rotate((this.rotation * Math.PI) / 180);
-        ctx.fillStyle = this.color;
 
-        ctx.beginPath();
-        if (this.shapeType === 0) {
-          // Draw a leaf/petal shape
-          ctx.ellipse(0, 0, this.size, this.size / 2, 0, 0, 2 * Math.PI);
+        if (this.type === 'petal') {
+          ctx.rotate((this.rotation * Math.PI) / 180);
+          ctx.fillStyle = this.color;
+          ctx.beginPath();
+          
+          // Simulate 3D rotation by squishing the shape width
+          const scaleX = Math.sin(this.rotationY);
+          ctx.scale(scaleX, 1);
+          
+          // Draw organic teardrop petal
+          ctx.moveTo(0, -this.size);
+          ctx.bezierCurveTo(this.size * 0.8, -this.size * 0.4, this.size * 0.8, this.size * 0.6, 0, this.size);
+          ctx.bezierCurveTo(-this.size * 0.8, this.size * 0.6, -this.size * 0.8, -this.size * 0.4, 0, -this.size);
+          ctx.fill();
         } else {
-          // Draw a small circle/glitter star
-          ctx.arc(0, 0, this.size / 2, 0, Math.PI * 2);
+          // Draw glowing golden 4-point star
+          ctx.fillStyle = `${this.color}${this.opacity})`;
+          ctx.beginPath();
+          const r = this.size;
+          
+          ctx.moveTo(0, -r);
+          ctx.quadraticCurveTo(0, 0, r, 0);
+          ctx.quadraticCurveTo(0, 0, 0, r);
+          ctx.quadraticCurveTo(0, 0, -r, 0);
+          ctx.quadraticCurveTo(0, 0, 0, -r);
+          ctx.fill();
         }
-        ctx.fill();
+
         ctx.restore();
       }
     }
 
-    // Initialize particles
+    // Initialize particles spread across the entire screen height
     for (let i = 0; i < particleCount; i++) {
-      particles.push(new Particle());
+      particles.push(new Particle(true));
     }
 
     // Animation loop
@@ -116,7 +193,7 @@ const ParticleBackground = () => {
         width: '100vw',
         height: '100vh',
         zIndex: 0, // Behind all content
-        pointerEvents: 'none', // Allow clicking elements through canvas
+        pointerEvents: 'none', // Allow clicks through
       }}
     />
   );

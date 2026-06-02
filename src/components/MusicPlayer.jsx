@@ -1,9 +1,17 @@
-import React, { useEffect, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import { Volume2, VolumeX } from 'lucide-react';
 
 const MusicPlayer = ({ isPlaying, setIsPlaying }) => {
   const playerRef = useRef(null);
   const iframeContainerId = 'youtube-audio-player';
+
+  const isPlayingRef = useRef(isPlaying);
+  const setIsPlayingRef = useRef(setIsPlaying);
+
+  useEffect(() => {
+    isPlayingRef.current = isPlaying;
+    setIsPlayingRef.current = setIsPlaying;
+  }, [isPlaying, setIsPlaying]);
 
   useEffect(() => {
     // 1. Load YouTube Iframe API if not already present
@@ -38,16 +46,16 @@ const MusicPlayer = ({ isPlaying, setIsPlaying }) => {
         events: {
           onReady: (event) => {
             event.target.setVolume(50); // Set volume to 50%
-            if (isPlaying) {
+            if (isPlayingRef.current) {
               event.target.playVideo();
             }
           },
           onStateChange: (event) => {
             // Check if player states sync
             if (event.data === window.YT.PlayerState.PLAYING) {
-              setIsPlaying(true);
+              setIsPlayingRef.current(true);
             } else if (event.data === window.YT.PlayerState.PAUSED || event.data === window.YT.PlayerState.ENDED) {
-              setIsPlaying(false);
+              setIsPlayingRef.current(false);
             }
           }
         }

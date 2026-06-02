@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { X, ZoomIn } from 'lucide-react';
 
 const PhotoGallery = () => {
@@ -158,19 +158,5 @@ const styles = {
     marginTop: '15px',
   }
 };
-
-// Add CSS injection for hover effect directly
-if (typeof document !== 'undefined') {
-  const styleSheet = document.styleSheets[0];
-  if (styleSheet) {
-    try {
-      styleSheet.insertRule(`
-        .polaroid-frame:hover .hover-overlay {
-          opacity: 1 !important;
-        }
-      `, styleSheet.cssRules.length);
-    } catch (e) {}
-  }
-}
 
 export default PhotoGallery;

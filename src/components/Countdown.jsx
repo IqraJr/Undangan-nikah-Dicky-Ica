@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
+
+// Target date: July 4, 2026 10:00:00 WITA (UTC+8)
+const TARGET_DATE = new Date('2026-07-04T10:00:00+08:00');
 
 const Countdown = () => {
-  // Target date: July 4, 2026 10:00:00 WITA (UTC+8)
-  const targetDate = new Date('2026-07-04T10:00:00+08:00');
-
   const [timeLeft, setTimeLeft] = useState({
     days: 0,
     hours: 0,
@@ -14,26 +14,20 @@ const Countdown = () => {
 
   useEffect(() => {
     const calculateTimeLeft = () => {
-      const difference = +targetDate - +new Date();
-      let newTimeLeft = {};
-
-      if (difference > 0) {
-        newTimeLeft = {
-          days: Math.floor(difference / (1000 * 60 * 60 * 24)),
-          hours: Math.floor((difference / (1000 * 60 * 60)) % 24),
-          minutes: Math.floor((difference / 1000 / 60) % 60),
-          seconds: Math.floor((difference / 1000) % 60),
-          isCompleted: false,
-        };
-      } else {
-        newTimeLeft = {
-          days: 0,
-          hours: 0,
-          minutes: 0,
-          seconds: 0,
-          isCompleted: true,
-        };
-      }
+      const difference = +TARGET_DATE - +new Date();
+      const newTimeLeft = difference > 0 ? {
+        days: Math.floor(difference / (1000 * 60 * 60 * 24)),
+        hours: Math.floor((difference / (1000 * 60 * 60)) % 24),
+        minutes: Math.floor((difference / 1000 / 60) % 60),
+        seconds: Math.floor((difference / 1000) % 60),
+        isCompleted: false,
+      } : {
+        days: 0,
+        hours: 0,
+        minutes: 0,
+        seconds: 0,
+        isCompleted: true,
+      };
       setTimeLeft(newTimeLeft);
     };
 
