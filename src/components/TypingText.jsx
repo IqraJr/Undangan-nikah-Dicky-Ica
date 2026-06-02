@@ -39,17 +39,18 @@ const TypingText = ({ text, speed = 40, delay = 300, triggerOnScroll = false }) 
   useEffect(() => {
     if (!start) return;
 
-    let timer;
     let currentIndex = 0;
+    let accumulatedText = '';
 
     // Clear text asynchronously to avoid React setState warnings
     const resetTimer = setTimeout(() => {
       setDisplayedText('');
     }, 0);
 
-    timer = setInterval(() => {
+    const timer = setInterval(() => {
       if (currentIndex < text.length) {
-        setDisplayedText((prev) => prev + text.charAt(currentIndex));
+        accumulatedText += text.charAt(currentIndex);
+        setDisplayedText(accumulatedText);
         currentIndex++;
       } else {
         clearInterval(timer);

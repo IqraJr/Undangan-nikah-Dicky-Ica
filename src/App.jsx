@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { Calendar, MapPin, Gift, Phone, Copy, BookOpen, Home, Users, Image, MessageSquare, CheckCircle, Play, Pause } from 'lucide-react';
+import { useState, useEffect, useRef } from 'react';
+import { Calendar, MapPin, Gift, Phone, Copy, BookOpen, Home, Users, Image, MessageSquare, CheckCircle } from 'lucide-react';
 import Countdown from './components/Countdown';
 import RSVPForm from './components/RSVPForm';
 import MusicPlayer from './components/MusicPlayer';
@@ -9,6 +9,7 @@ import ParticleBackground from './components/ParticleBackground';
 import PhotoGallery from './components/PhotoGallery';
 import ThreadDivider from './components/ThreadDivider';
 import PageBorder from './components/PageBorder';
+import JooxPlayer from './components/JooxPlayer';
 
 const Instagram = ({ size = 24, ...props }) => (
   <svg
@@ -32,6 +33,64 @@ const Instagram = ({ size = 24, ...props }) => (
 function App() {
   const [isOpen, setIsOpen] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
+  const [currentTime, setCurrentTime] = useState(0);
+  const [duration, setDuration] = useState(0);
+  const audioRef = useRef(null);
+
+  // Initialize and manage global audio lifecycle
+  useEffect(() => {
+    const audio = new Audio('./lagu1.MP3');
+    audio.loop = true;
+    audio.volume = 0.5;
+    audioRef.current = audio;
+
+    const handleTimeUpdate = () => {
+      setCurrentTime(audio.currentTime);
+    };
+
+    const handleLoadedMetadata = () => {
+      setDuration(audio.duration || 0);
+    };
+
+    const handlePlay = () => setIsPlaying(true);
+    const handlePause = () => setIsPlaying(false);
+
+    audio.addEventListener('timeupdate', handleTimeUpdate);
+    audio.addEventListener('loadedmetadata', handleLoadedMetadata);
+    audio.addEventListener('play', handlePlay);
+    audio.addEventListener('pause', handlePause);
+
+    return () => {
+      audio.pause();
+      audio.removeEventListener('timeupdate', handleTimeUpdate);
+      audio.removeEventListener('loadedmetadata', handleLoadedMetadata);
+      audio.removeEventListener('play', handlePlay);
+      audio.removeEventListener('pause', handlePause);
+      audioRef.current = null;
+    };
+  }, []);
+
+  // Sync isPlaying React state to native Audio element
+  useEffect(() => {
+    if (!audioRef.current) return;
+
+    if (isPlaying) {
+      audioRef.current.play().catch(err => {
+        console.warn("Audio playback blocked by browser user interaction rules:", err);
+        setIsPlaying(false);
+      });
+    } else {
+      audioRef.current.pause();
+    }
+  }, [isPlaying]);
+
+  const handleSeek = (time) => {
+    if (audioRef.current) {
+      audioRef.current.currentTime = time;
+      setCurrentTime(time);
+    }
+  };
+
   const [guestName] = useState(() => {
     if (typeof window !== 'undefined') {
       const params = new URLSearchParams(window.location.search);
@@ -175,7 +234,7 @@ function App() {
           <ScrollReveal>
             <div className="font-playful save-date-header" style={styles.saveDateHeader}>
               <TypingText
-                text={"  SAVE\nTHE\nDATE!"}
+                text={" SAVE\nTHE\nDATE!"}
                 speed={120}
                 delay={400}
                 triggerOnScroll={true}
@@ -211,20 +270,14 @@ tanda (kebesaran Allah) bagi kaum yang berpikir.”`}
               <span style={styles.verseRef} className="font-playful">QS Ar-Rum: 21</span>
             </div>
 
-            {/* Pemutar Musik Latar (Inline Music Player Capsule) */}
-            <div 
-              className="inline-music-player animate-pulse-slow" 
-              onClick={() => setIsPlaying(!isPlaying)}
-              title={isPlaying ? "Klik untuk Menjeda Musik" : "Klik untuk Memutar Musik"}
-            >
-              <button className="inline-play-btn" aria-label={isPlaying ? "Jeda Musik" : "Putar Musik"}>
-                {isPlaying ? <Pause size={14} fill="currentColor" /> : <Play size={14} fill="currentColor" />}
-              </button>
-              <span className="inline-player-text font-playful">
-                {isPlaying ? "Memutar Musik Latar 🎵" : "Putar Musik Latar 🔇"}
-              </span>
-              <div className={`dvd-disc ${isPlaying ? 'spinning' : ''}`} />
-            </div>
+            {/* JOOX-Style Music Player */}
+            <JooxPlayer 
+              isPlaying={isPlaying} 
+              setIsPlaying={setIsPlaying} 
+              currentTime={currentTime} 
+              duration={duration} 
+              onSeek={handleSeek} 
+            />
 
             <ThreadDivider />
           </ScrollReveal>
