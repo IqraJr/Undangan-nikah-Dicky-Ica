@@ -65,39 +65,15 @@ const MusicPlayer = ({ isPlaying, setIsPlaying }) => {
     <div 
       className={`music-player-widget ${isPlaying ? 'playing' : ''}`} 
       onClick={togglePlay}
-      style={styles.floatingButton}
       title={isPlaying ? "Matikan Musik" : "Putar Musik"}
     >
       {isPlaying ? (
-        <Volume2 size={24} color="#7A0C02" style={styles.iconRotate} />
+        <Volume2 size={24} color="#7A0C02" className="music-widget-icon-playing" />
       ) : (
         <VolumeX size={24} color="#7A0C02" />
       )}
     </div>
   );
-};
-
-const styles = {
-  floatingButton: {
-    position: 'fixed',
-    bottom: '24px',
-    right: '24px',
-    width: '48px',
-    height: '48px',
-    borderRadius: '50%',
-    backgroundColor: '#FFFFFF',
-    border: '2px solid #7A0C02',
-    boxShadow: '0 4px 15px rgba(122, 12, 2, 0.15)',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    cursor: 'pointer',
-    zIndex: 999,
-    transition: 'all 0.3s ease',
-  },
-  iconRotate: {
-    animation: 'spin 4s linear infinite',
-  }
 };
 
 export default MusicPlayer;
