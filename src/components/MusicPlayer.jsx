@@ -2,9 +2,7 @@ import { useEffect, useRef } from 'react';
 import { Volume2, VolumeX } from 'lucide-react';
 
 const MusicPlayer = ({ isPlaying, setIsPlaying }) => {
-  const playerRef = useRef(null);
-  const iframeContainerId = 'youtube-audio-player';
-
+  const audioRef = useRef(null);
   const isPlayingRef = useRef(isPlaying);
   const setIsPlayingRef = useRef(setIsPlaying);
 
@@ -14,114 +12,68 @@ const MusicPlayer = ({ isPlaying, setIsPlaying }) => {
   }, [isPlaying, setIsPlaying]);
 
   useEffect(() => {
-    // 1. Load YouTube Iframe API if not already present
-    if (!window.YT) {
-      const tag = document.createElement('script');
-      tag.src = 'https://www.youtube.com/iframe_api';
-      const firstScriptTag = document.getElementsByTagName('script')[0];
-      if (firstScriptTag && firstScriptTag.parentNode) {
-        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
-      } else {
-        document.head.appendChild(tag);
-      }
-    }
+    // Create HTML5 Audio element loading local lagu1.MP3
+    const audio = new Audio('./lagu1.MP3');
+    audio.loop = true;
+    audio.volume = 0.5; // Set volume to 50%
+    audioRef.current = audio;
 
-    const initPlayer = () => {
-      // Ensure element exists before initializing
-      if (!document.getElementById(iframeContainerId)) return;
+    // Listen to native events to keep React state synchronized
+    const handlePlay = () => setIsPlayingRef.current(true);
+    const handlePause = () => setIsPlayingRef.current(false);
 
-      playerRef.current = new window.YT.Player(iframeContainerId, {
-        height: '0',
-        width: '0',
-        videoId: '3pYqVj-FyBk',
-        playerVars: {
-          autoplay: 0,
-          loop: 1,
-          playlist: '3pYqVj-FyBk', // Required for looping single video
-          controls: 0,
-          showinfo: 0,
-          rel: 0,
-          modestbranding: 1,
-        },
-        events: {
-          onReady: (event) => {
-            event.target.setVolume(50); // Set volume to 50%
-            if (isPlayingRef.current) {
-              event.target.playVideo();
-            }
-          },
-          onStateChange: (event) => {
-            // Check if player states sync
-            if (event.data === window.YT.PlayerState.PLAYING) {
-              setIsPlayingRef.current(true);
-            } else if (event.data === window.YT.PlayerState.PAUSED || event.data === window.YT.PlayerState.ENDED) {
-              setIsPlayingRef.current(false);
-            }
-          }
-        }
+    audio.addEventListener('play', handlePlay);
+    audio.addEventListener('pause', handlePause);
+
+    // Try playing if state starts as true (e.g. user unlocked the invitation)
+    if (isPlayingRef.current) {
+      audio.play().catch(err => {
+        console.warn("Autoplay blocked by browser:", err);
+        setIsPlayingRef.current(false);
       });
-    };
-
-    // 2. Set up callback
-    if (window.YT && window.YT.Player) {
-      initPlayer();
-    } else {
-      const prevCallback = window.onYouTubeIframeAPIReady;
-      window.onYouTubeIframeAPIReady = () => {
-        if (prevCallback) prevCallback();
-        initPlayer();
-      };
     }
 
     return () => {
-      if (playerRef.current && playerRef.current.destroy) {
-        try {
-          playerRef.current.destroy();
-        } catch (e) {
-          console.warn("Could not destroy YT player:", e);
-        }
+      if (audio) {
+        audio.pause();
+        audio.removeEventListener('play', handlePlay);
+        audio.removeEventListener('pause', handlePause);
       }
+      audioRef.current = null;
     };
-  }, []);
+  }, []); // Run once on mount
 
-  // Trigger play/pause when isPlaying prop changes
+  // Sync play/pause prop changes to the HTML5 Audio element
   useEffect(() => {
-    if (!playerRef.current || typeof playerRef.current.playVideo !== 'function') return;
-
-    try {
-      if (isPlaying) {
-        playerRef.current.playVideo();
-      } else {
-        playerRef.current.pauseVideo();
-      }
-    } catch (e) {
-      console.warn("Error toggling YouTube video playback:", e);
+    if (!audioRef.current) return;
+    
+    if (isPlaying) {
+      audioRef.current.play().catch(err => {
+        console.warn("Audio play blocked by browser:", err);
+        setIsPlaying(false);
+      });
+    } else {
+      audioRef.current.pause();
     }
-  }, [isPlaying]);
+  }, [isPlaying, setIsPlaying]);
 
   const togglePlay = () => {
     setIsPlaying(!isPlaying);
   };
 
   return (
-    <>
-      {/* Invisible container for YouTube Iframe Player */}
-      <div id={iframeContainerId} style={{ display: 'none', width: 0, height: 0 }}></div>
-
-      {/* Circular Floating Music Action Button */}
-      <div 
-        className={`music-player-widget ${isPlaying ? 'playing' : ''}`} 
-        onClick={togglePlay}
-        style={styles.floatingButton}
-        title={isPlaying ? "Matikan Musik" : "Putar Musik"}
-      >
-        {isPlaying ? (
-          <Volume2 size={24} color="#7A0C02" style={styles.iconRotate} />
-        ) : (
-          <VolumeX size={24} color="#7A0C02" />
-        )}
-      </div>
-    </>
+    <div 
+      className={`music-player-widget ${isPlaying ? 'playing' : ''}`} 
+      onClick={togglePlay}
+      style={styles.floatingButton}
+      title={isPlaying ? "Matikan Musik" : "Putar Musik"}
+    >
+      {isPlaying ? (
+        <Volume2 size={24} color="#7A0C02" style={styles.iconRotate} />
+      ) : (
+        <VolumeX size={24} color="#7A0C02" />
+      )}
+    </div>
   );
 };
 
