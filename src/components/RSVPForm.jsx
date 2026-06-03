@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Check, X, Send } from 'lucide-react';
+import { supabase } from '../supabaseClient';
 
 // Default initial wishes
 const INITIAL_WISHES = [
@@ -26,46 +27,101 @@ const INITIAL_WISHES = [
   }
 ];
 
+// Check if Supabase is fully configured with actual keys
+const isSupabaseReady = 
+  supabase !== null &&
+  import.meta.env.VITE_SUPABASE_URL && 
+  import.meta.env.VITE_SUPABASE_URL !== 'YOUR_SUPABASE_PROJECT_URL' &&
+  import.meta.env.VITE_SUPABASE_ANON_KEY &&
+  import.meta.env.VITE_SUPABASE_ANON_KEY !== 'YOUR_SUPABASE_ANON_KEY';
+
 const RSVPForm = ({ defaultGuestName }) => {
   const [name, setName] = useState(defaultGuestName || '');
   const [wishes, setWishes] = useState('');
   const [presence, setPresence] = useState('hadir');
   const [guestWishes, setGuestWishes] = useState(() => {
-    const savedWishes = localStorage.getItem('wedding_wishes');
-    if (savedWishes) {
-      try {
-        return JSON.parse(savedWishes);
-      } catch (e) {
-        console.error("Failed to parse saved wishes", e);
+    // If Supabase is not ready yet, load from localStorage
+    if (!isSupabaseReady) {
+      const savedWishes = localStorage.getItem('wedding_wishes');
+      if (savedWishes) {
+        try {
+          return JSON.parse(savedWishes);
+        } catch (e) {
+          console.error("Failed to parse saved wishes", e);
+        }
       }
+      return INITIAL_WISHES;
     }
-    return INITIAL_WISHES;
+    return [];
   });
+  const [loading, setLoading] = useState(isSupabaseReady);
   const [submitted, setSubmitted] = useState(false);
 
   useEffect(() => {
-    const savedWishes = localStorage.getItem('wedding_wishes');
-    if (!savedWishes) {
-      localStorage.setItem('wedding_wishes', JSON.stringify(INITIAL_WISHES));
+    console.log("Supabase connection configuration status:", isSupabaseReady ? "READY" : "NOT READY (Using Local Fallback)");
+    if (!isSupabaseReady) {
+      const savedWishes = localStorage.getItem('wedding_wishes');
+      if (!savedWishes) {
+        localStorage.setItem('wedding_wishes', JSON.stringify(INITIAL_WISHES));
+      }
+      return;
     }
+
+    const fetchWishes = async () => {
+      setLoading(true);
+      const { data, error } = await supabase
+        .from('wishes')
+        .select('*')
+        .order('date', { ascending: false });
+
+      if (error) {
+        console.error('Gagal mengambil ucapan dari Supabase:', error);
+      } else if (data) {
+        console.log("Wishes successfully loaded from Supabase. Total count:", data.length);
+        setGuestWishes(data);
+      }
+      setLoading(false);
+    };
+
+    fetchWishes();
   }, []);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!name.trim() || !wishes.trim()) return;
 
-    // Save locally for the website wishes board
     const newWish = {
-      id: Date.now(),
       name: name.trim(),
       wishes: wishes.trim(),
       presence,
       date: new Date().toISOString()
     };
 
-    const updatedWishes = [newWish, ...guestWishes];
-    setGuestWishes(updatedWishes);
-    localStorage.setItem('wedding_wishes', JSON.stringify(updatedWishes));
+    if (isSupabaseReady) {
+      console.log("Attempting to insert wish to Supabase:", newWish);
+      // Simpan ke Supabase
+      const { data, error } = await supabase
+        .from('wishes')
+        .insert([newWish])
+        .select();
+
+      if (error) {
+        console.error('Gagal menyimpan ucapan ke Supabase:', error);
+      } else if (data && data.length > 0) {
+        console.log("Successfully saved wish to Supabase!", data[0]);
+        setGuestWishes((prev) => [data[0], ...prev]);
+      }
+    } else {
+      console.log("Supabase is not configured. Saving wish locally to localStorage...");
+      // Simpan ke localStorage (fallback lokal)
+      const localWish = {
+        id: Date.now(),
+        ...newWish
+      };
+      const updatedWishes = [localWish, ...guestWishes];
+      setGuestWishes(updatedWishes);
+      localStorage.setItem('wedding_wishes', JSON.stringify(updatedWishes));
+    }
     
     const coupleWhatsAppNumber = '6282229344852';
     const presenceStatus = presence === 'hadir' ? 'Hadir' : 'Tidak Hadir';
@@ -182,11 +238,13 @@ const RSVPForm = ({ defaultGuestName }) => {
       {/* Wishes Board */}
       <h3 style={styles.boardTitle} className="font-playful">Daftar Ucapan</h3>
       <div style={styles.boardContainer}>
-        {guestWishes.length === 0 ? (
+        {loading ? (
+          <p style={styles.emptyText}>Memuat ucapan... ⏳</p>
+        ) : guestWishes.length === 0 ? (
           <p style={styles.emptyText}>Belum ada ucapan. Jadilah yang pertama! 😊</p>
         ) : (
-          guestWishes.map((wish) => (
-            <div key={wish.id} style={styles.wishCard}>
+          guestWishes.map((wish, index) => (
+            <div key={`wish-${wish.id || 'no-id'}-${index}`} style={styles.wishCard}>
               <div style={styles.wishHeader}>
                 <span style={styles.wishName} className="font-playful">{wish.name}</span>
                 <span 

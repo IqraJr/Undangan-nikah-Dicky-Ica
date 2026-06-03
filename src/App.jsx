@@ -106,7 +106,7 @@ function App() {
 
   // Bank accounts config
   const accounts = [
-    { id: 'bni', bankName: 'BNI', number: '1277492834', holder: 'Annisa Rahmadani' },
+    { id: 'bca', bankName: 'BCA', number: '7245776349', holder: 'Annisa Rahmadani' },
     { id: 'bca', bankName: 'BCA', number: '7829402948', holder: 'Dicky Asa Dewa P.' }
   ];
 
