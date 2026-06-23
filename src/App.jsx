@@ -329,7 +329,7 @@ untuk menghadiri pernikahan kami
 
                 <div className="polaroid-frame" style={styles.polaroidContainer}>
                   <img
-                    src="./extracted_images/X18_2.png"
+                    src="./extracted_images/fotoutama.png"
                     alt="Dicky and Ica"
                     style={styles.polaroidImg}
                   />
