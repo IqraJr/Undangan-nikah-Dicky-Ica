@@ -94,10 +94,35 @@ function App() {
 
   const [guestName] = useState(() => {
     if (typeof window !== 'undefined') {
-      const params = new URLSearchParams(window.location.search);
-      const to = params.get('to');
-      if (to) {
-        return decodeURIComponent(to);
+      const search = window.location.search;
+      console.log("RAW Query Search:", search);
+      const toIndex = search.indexOf('to=');
+      if (toIndex !== -1) {
+        let rawValue = search.substring(toIndex + 3);
+        console.log("Raw Value after to=:", rawValue);
+        
+        // Memeriksa jika ada parameter lain setelah 'to=' (seperti &u=1). 
+        // Jika setelah karakter '&' tidak ada tanda '=', berarti '&' tersebut bagian dari nama (seperti '& Ny.').
+        const nextParamIndex = rawValue.indexOf('&');
+        if (nextParamIndex !== -1) {
+          const remainder = rawValue.substring(nextParamIndex + 1);
+          if (remainder.includes('=')) {
+            rawValue = rawValue.substring(0, nextParamIndex);
+          }
+        }
+        console.log("Parsed Raw Value:", rawValue);
+
+        try {
+          // Ganti '+' dengan '%20' agar decodeURIComponent bisa menerjemahkan sebagai spasi
+          rawValue = rawValue.replace(/\+/g, '%20');
+          const decoded = decodeURIComponent(rawValue);
+          console.log("Decoded Guest Name:", decoded);
+          return decoded;
+        } catch {
+          const decodedFallback = rawValue.replace(/\+/g, ' ');
+          console.log("Decoded Guest Name (Fallback):", decodedFallback);
+          return decodedFallback;
+        }
       }
     }
     return 'Sahabat & Kerabat';
