@@ -1,9 +1,7 @@
-import { useState, useRef } from 'react';
-import { Play, Pause, RotateCcw, RotateCw, Camera } from 'lucide-react';
+import { Play, Pause, RotateCcw, RotateCw } from 'lucide-react';
 
 const JooxPlayer = ({ isPlaying, setIsPlaying, currentTime, duration, onSeek }) => {
-  const [coverImage, setCoverImage] = useState('./extracted_images/profil1.png');
-  const fileInputRef = useRef(null);
+  const coverImage = './extracted_images/foto2.png';
 
   // Format seconds to mm:ss
   const formatTime = (timeInSeconds) => {
@@ -11,25 +9,6 @@ const JooxPlayer = ({ isPlaying, setIsPlaying, currentTime, duration, onSeek }) 
     const minutes = Math.floor(timeInSeconds / 60);
     const seconds = Math.floor(timeInSeconds % 60);
     return `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
-  };
-
-  // Handle Cover Art Image Upload
-  const handleImageUpload = (event) => {
-    const file = event.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        setCoverImage(e.target.result);
-      };
-      reader.readAsDataURL(file);
-    }
-  };
-
-  const triggerFileInput = (e) => {
-    e.stopPropagation(); // Avoid triggering play/pause
-    if (fileInputRef.current) {
-      fileInputRef.current.click();
-    }
   };
 
   const handleProgressChange = (e) => {
@@ -48,22 +27,6 @@ const JooxPlayer = ({ isPlaying, setIsPlaying, currentTime, duration, onSeek }) 
               src={coverImage} 
               alt="Album Cover" 
               className="joox-cover-art" 
-            />
-            {/* Upload Button overlay */}
-            <button 
-              className="joox-upload-overlay-btn" 
-              onClick={triggerFileInput}
-              title="Ganti Foto Sampul"
-              aria-label="Ganti Foto Sampul"
-            >
-              <Camera size={14} color="#FFFFFF" />
-            </button>
-            <input 
-              type="file" 
-              ref={fileInputRef} 
-              style={{ display: 'none' }} 
-              accept="image/*" 
-              onChange={handleImageUpload} 
             />
           </div>
           <div className="joox-center-hole"></div>

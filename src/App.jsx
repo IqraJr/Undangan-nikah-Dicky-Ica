@@ -10,6 +10,7 @@ import PhotoGallery from './components/PhotoGallery';
 import ThreadDivider from './components/ThreadDivider';
 import PageBorder from './components/PageBorder';
 import JooxPlayer from './components/JooxPlayer';
+import BlurRevealText from './components/BlurRevealText';
 
 const Instagram = ({ size = 24, ...props }) => (
   <svg
@@ -254,7 +255,7 @@ function App() {
             {/* Quran Verse */}
             <div style={styles.verseCard} className="card">
               <p style={styles.verseTranslation}>
-                <TypingText
+                <BlurRevealText
                   text={`“ Di antara tanda-tanda (kebesaran)-Nya ialah bahwa
 Dia menciptakan pasangan-pasangan untukmu dari
 (jenis) dirimu sendiri agar kamu cenderung dan
@@ -262,7 +263,7 @@ merasa tenteram kepadanya, dan Dia menjadikan di
 antaramu rasa cinta dan kasih sayang. Sesungguhnya
 pada yang demikian itu benar-benar terdapat tanda-
 tanda (kebesaran Allah) bagi kaum yang berpikir.”`}
-                  speed={38}
+                  wordDelay={35}
                   delay={400}
                   triggerOnScroll={true}
                 />
@@ -648,7 +649,7 @@ untuk menghadiri pernikahan kami
         <div className="section-content">
           <ScrollReveal>
             <h2 style={styles.footerThanks} className="font-handwritten">See You!</h2>
-            <h3 style={styles.footerNames} className="font-playful">Dicky + Ica</h3>
+            <h3 style={styles.footerNames} className="font-playful">Ica + Dicky</h3>
             <p style={styles.footerDate}>04.07.2026</p>
           </ScrollReveal>
         </div>
