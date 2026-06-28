@@ -231,35 +231,95 @@ h1, h2, h3, h4, h5, h6 {
 
 /* Custom Polaroid Style */
 .polaroid-frame {
+  position: relative;
   background-color: var(--cream-card);
-  padding: 16px 16px 32px 16px;
+  padding: 8px; /* Tighter padding to give space for inner border */
   box-shadow: 0 10px 24px rgba(0,0,0,0.06);
   border: 1px solid var(--cream-dark);
   transform: rotate(-1.5deg);
-  transition: all 0.3s ease;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   display: inline-block;
-  max-width: 100%;
+  width: 100%;
+  max-width: 165px; /* Default on mobile */
+}
+
+/* Elegant double-dashed inner gold border wrapping the photo and ornament */
+.polaroid-inner-border {
+  border: 1px dashed rgba(212, 175, 55, 0.45);
+  padding: 8px 8px 12px 8px;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  box-sizing: border-box;
+  transition: border-color 0.3s ease;
+}
+
+.polaroid-frame:hover .polaroid-inner-border {
+  border-color: var(--gold-primary);
+}
+
+/* Responsive grid layout */
+.photo-gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+  justify-items: center;
+  max-width: 960px;
+  margin: 24px auto 0 auto;
+}
+
+/* Elegant scrapbook-style translucent gold tape at the top */
+.polaroid-frame::before {
+  content: "";
+  position: absolute;
+  top: -8px;
+  left: 50%;
+  transform: translateX(-50%) rotate(-2.5deg);
+  width: 58px;
+  height: 16px;
+  background-color: rgba(212, 175, 55, 0.22); /* Translucent gold tape */
+  backdrop-filter: blur(1px);
+  -webkit-backdrop-filter: blur(1px);
+  border-left: 1px dashed rgba(212, 175, 55, 0.4);
+  border-right: 1px dashed rgba(212, 175, 55, 0.4);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+  z-index: 5;
+  pointer-events: none;
 }
 
 .polaroid-frame:hover {
-  transform: rotate(1.5deg) scale(1.02);
-  box-shadow: 0 15px 35px rgba(122, 12, 2, 0.1);
+  transform: rotate(1.5deg) scale(1.03);
+  box-shadow: 0 15px 35px rgba(122, 12, 2, 0.1),
+              0 0 12px rgba(212, 175, 55, 0.2); /* Subtle gold hover glow */
+  border-color: rgba(212, 175, 55, 0.5);
 }
 
 .polaroid-frame img {
   width: 100%;
-  max-width: 250px;
   height: auto;
   aspect-ratio: 1;
   object-fit: cover;
   border: 1px solid rgba(0,0,0,0.05);
 }
 
+@media (min-width: 768px) {
+  .polaroid-frame {
+    max-width: 220px; /* Scale up polaroids on desktop */
+    padding: 10px;
+  }
+  .polaroid-inner-border {
+    padding: 10px 10px 14px 10px;
+  }
+  .photo-gallery-grid {
+    grid-template-columns: repeat(4, 1fr); /* 4 columns side-by-side on desktop */
+    gap: 24px;
+  }
+}
+
 .polaroid-frame .caption {
-  font-family: var(--font-playful);
+  font-family: var(--font-sans);
   color: var(--burgundy-primary);
-  font-size: 1.3rem;
-  margin-top: 12px;
+  margin-top: 10px;
   text-align: center;
 }
 

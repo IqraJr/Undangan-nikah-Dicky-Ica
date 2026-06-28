@@ -107,7 +107,7 @@ function App() {
   // Bank accounts config
   const accounts = [
     { id: 'bca', bankName: 'BCA', number: '7245776349', holder: 'Annisa Rahmadani' },
-    { id: 'bca', bankName: 'BCA', number: '7829402948', holder: 'Dicky Asa Dewa P.' }
+    { id: 'bca', bankName: 'BCA', number: '7245077505', holder: 'Dicky Asa Dewa Pitaloeka' }
   ];
 
   const handleOpenInvitation = () => {
@@ -329,11 +329,11 @@ untuk menghadiri pernikahan kami
 
                 <div className="polaroid-frame" style={styles.polaroidContainer}>
                   <img
-                    src="./extracted_images/fotoutama.png"
-                    alt="Dicky and Ica"
+                    src="./extracted_images/foto-kecil.png"
+                    alt="Ica & Dicky"
                     style={styles.polaroidImg}
                   />
-                  <div className="caption">Dicky & Ica</div>
+                  <div className="caption">Ica & Dicky</div>
                 </div>
               </div>
             </div>
@@ -359,13 +359,13 @@ untuk menghadiri pernikahan kami
                   dan <strong>Almh. Ibu Suniyati</strong>
                 </p>
                 <a 
-                  href="https://instagram.com/annisarhmdni_" 
+                  href="https://www.instagram.com/panggilsajaicaa/" 
                   target="_blank" 
                   rel="noopener noreferrer" 
                   className="instagram-btn"
                 >
                   <Instagram size={14} />
-                  <span>@annisarhmdni_</span>
+                  <span>@panggilsajaicaa</span>
                 </a>
               </div>
 
@@ -389,13 +389,13 @@ untuk menghadiri pernikahan kami
                   dan <strong>Ibu Ludia Kabolo</strong>
                 </p>
                 <a 
-                  href="https://instagram.com/dickyasadevap" 
+                  href="https://www.instagram.com/dicky_pitaloeka/" 
                   target="_blank" 
                   rel="noopener noreferrer" 
                   className="instagram-btn"
                 >
                   <Instagram size={14} />
-                  <span>@dickyasadevap</span>
+                  <span>@dicky_pitaloeka</span>
                 </a>
               </div>
             </div>
@@ -535,6 +535,9 @@ untuk menghadiri pernikahan kami
         <div className="section-content">
           <ScrollReveal>
             <h2 style={styles.sectionTitle} className="font-playful">Galeri Foto</h2>
+            <p style={{ textAlign: 'center', color: 'var(--text-medium)', marginBottom: '32px', fontSize: '0.95rem', fontStyle: 'italic', marginTop: '-8px' }}>
+              Momen-momen indah yang terabadikan dalam kisah cinta kami
+            </p>
             <PhotoGallery />
             <ThreadDivider />
           </ScrollReveal>

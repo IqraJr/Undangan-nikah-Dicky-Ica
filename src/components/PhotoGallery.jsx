@@ -1,14 +1,14 @@
 import { useState } from 'react';
-import { X, ZoomIn } from 'lucide-react';
+import { X, ZoomIn, Heart } from 'lucide-react';
 
 const PhotoGallery = () => {
   const [activePhoto, setActivePhoto] = useState(null);
 
   const photos = [
-    { id: 1, src: './extracted_images/X18_2.png', caption: 'Kebersamaan Kami', rotation: '-2deg' },
-    { id: 2, src: './extracted_images/X7_2.png', caption: 'Langkah Awal', rotation: '1deg' },
-    { id: 3, src: './extracted_images/X13_1.png', caption: 'Tawa & Ceria', rotation: '-1.5deg' },
-    { id: 4, src: './extracted_images/X15_1.png', caption: 'Hari Bahagia', rotation: '2deg' }
+    { id: 1, src: './extracted_images/ica-kecil.png', rotation: '-2deg' },
+    { id: 2, src: './extracted_images/dicky-kecil.png', rotation: '1deg' },
+    { id: 3, src: './extracted_images/foto1.png', rotation: '-1.5deg' },
+    { id: 4, src: './extracted_images/foto2.png', rotation: '2deg' }
   ];
 
   const handleOpenLightbox = (photo) => {
@@ -21,8 +21,8 @@ const PhotoGallery = () => {
 
   return (
     <div style={styles.container}>
-      {/* Photo Grid */}
-      <div style={styles.grid}>
+      {/* Photo Grid - now styled responsively in CSS */}
+      <div className="photo-gallery-grid">
         {photos.map((photo) => (
           <div 
             key={photo.id} 
@@ -33,17 +33,28 @@ const PhotoGallery = () => {
             }}
             onClick={() => handleOpenLightbox(photo)}
           >
-            <div style={styles.imageContainer}>
-              <img 
-                src={photo.src} 
-                alt={photo.caption} 
-                style={styles.image}
-              />
-              <div className="hover-overlay" style={styles.hoverOverlay}>
-                <ZoomIn color="#FFFFFF" size={24} />
+            {/* Elegant double-dashed inner gold border */}
+            <div className="polaroid-inner-border">
+              <div style={styles.imageContainer}>
+                <img 
+                  src={photo.src} 
+                  alt="Galeri Foto" 
+                  style={styles.image}
+                />
+                <div className="hover-overlay" style={styles.hoverOverlay}>
+                  <ZoomIn color="#FFFFFF" size={24} />
+                </div>
+              </div>
+              
+              {/* Elegant Golden Heart Ornament inside the gold dashed frame */}
+              <div className="caption" style={styles.captionText}>
+                <div style={styles.ornamentContainer}>
+                  <div style={styles.ornamentLine}></div>
+                  <Heart size={10} color="var(--gold-primary)" fill="var(--gold-primary)" style={{ opacity: 0.8 }} />
+                  <div style={styles.ornamentLine}></div>
+                </div>
               </div>
             </div>
-            <div className="caption" style={styles.captionText}>{photo.caption}</div>
           </div>
         ))}
       </div>
@@ -57,10 +68,9 @@ const PhotoGallery = () => {
           <div style={styles.lightboxContent} onClick={(e) => e.stopPropagation()}>
             <img 
               src={activePhoto.src} 
-              alt={activePhoto.caption} 
+              alt="Preview Foto" 
               style={styles.lightboxImg}
             />
-            <p style={styles.lightboxCaption} className="font-playful">{activePhoto.caption}</p>
           </div>
         </div>
       )}
@@ -73,16 +83,9 @@ const styles = {
     width: '100%',
     margin: '20px 0',
   },
-  grid: {
-    display: 'grid',
-    gridTemplateColumns: 'repeat(2, 1fr)',
-    gap: '16px',
-    justifyItems: 'center',
-  },
   polaroidWrapper: {
     cursor: 'pointer',
     width: '100%',
-    maxWidth: '180px',
   },
   imageContainer: {
     position: 'relative',
@@ -110,8 +113,24 @@ const styles = {
   },
   captionText: {
     fontSize: '0.95rem',
-    marginTop: '10px',
+    marginTop: '8px',
     textAlign: 'center',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  ornamentContainer: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: '10px',
+    width: '100%',
+    padding: '4px 0',
+  },
+  ornamentLine: {
+    height: '1px',
+    width: '20px',
+    backgroundColor: 'rgba(212, 175, 55, 0.35)',
   },
   lightboxOverlay: {
     position: 'fixed',
@@ -151,11 +170,6 @@ const styles = {
     borderRadius: '6px',
     border: '4px solid #FFFFFF',
     boxShadow: '0 10px 30px rgba(0,0,0,0.5)',
-  },
-  lightboxCaption: {
-    color: '#FFFFFF',
-    fontSize: '1.2rem',
-    marginTop: '15px',
   }
 };
 
